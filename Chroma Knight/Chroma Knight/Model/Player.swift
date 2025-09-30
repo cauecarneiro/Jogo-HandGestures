@@ -15,7 +15,7 @@ class Player {
     
     //jump
     var isJumping: Bool = false
-    var jumpForce: CGFloat = 100.0
+    var jumpForce: CGFloat = 30.0
     
     //sword
     var sword: Sword
@@ -39,8 +39,8 @@ class Player {
     init(size: CGSize, sword: Sword) {
         self.movementSpeed = 2.0
         self.node = SKSpriteNode(imageNamed: "player0")
-        node.size = CGSize(width: 809/15, height: 1024/15)
-        node.position = CGPoint(x: size.width/2, y: (size.height / 2 - size.height / 3.4) + node.size.height)
+        node.size = CGSize(width: 809/30, height: 1024/30)
+        node.position = CGPoint(x: 0, y: 280 + node.size.height)
         node.zPosition = 1
         node.name = "player"
         
@@ -74,7 +74,7 @@ class Player {
     func animatePlayer() {
         if(!isJumping) {
             if(!damageCD) {
-                node.size = CGSize(width: 809/15, height: 1024/15)
+                node.size = CGSize(width: 809/30, height: 1024/30)
                 node.removeAction(forKey: "animation")
                 node.run(SKAction.repeatForever(SKAction.animate(with: textures, timePerFrame: 1/TimeInterval(textures.count), resize: false, restore: false)), withKey: "animation")
             }
@@ -85,7 +85,7 @@ class Player {
     func animateWalk() {
         if(!isJumping) {
             if(!damageCD) {
-                node.size = CGSize(width: 927/15, height: 1024/15)
+                node.size = CGSize(width: 927/30, height: 1024/30)
                 node.removeAction(forKey: "animation")
                 node.run(SKAction.repeatForever(SKAction.animate(with: walkingTextures, timePerFrame: 1/TimeInterval(walkingTextures.count), resize: false, restore: false)), withKey: "animation")
                 sword.animateSwordWalking(duration: 1/TimeInterval(walkingTextures.count))
@@ -102,7 +102,7 @@ class Player {
     func playerJump() {
         if(!isJumping) {
             if(!damageCD) {
-                node.size = CGSize(width: 809/15, height: 1024/15)
+                node.size = CGSize(width: 809/30, height: 1024/30)
                 node.texture = SKTexture(imageNamed: "playerJumping")
             }
             if isJumping && !isJumpAttacking { return }
@@ -120,6 +120,15 @@ class Player {
         node.physicsBody?.velocity = CGVector.zero
         node.physicsBody?.applyImpulse(vector)
     }
+//    func incCombo() {
+//        combo += 1
+//        self.sword.node.color = generateColor(level: combo)
+//        self.sword.node.colorBlendFactor = 0.8
+//        if let leftSword = leftSword {
+//            leftSword.node.color = generateColor(level: combo)
+//            leftSword.node.colorBlendFactor = 0.8
+//        }
+//    }
     
     func jumpAttack() {
         if(!isJumpAttacking) {
@@ -127,7 +136,7 @@ class Player {
             leftSword?.jumpAttackLeft()
             if(!damageCD) {
                 self.node.removeAction(forKey: "animation")
-                node.size = CGSize(width: 809/15, height: 1024/15)
+                node.size = CGSize(width: 809/30, height: 1024/30)
                 node.texture = SKTexture(imageNamed: "playerJumpAttack")
             }
             isJumpAttacking = true
@@ -147,8 +156,18 @@ class Player {
     func takeDamage(direction: CGFloat, damage: Int) {
         if(!damageCD) {
             hp -= damage
+            
+            // Adiciona a verificação de Game Over
+            if let scene = node.scene as? LevelOneScene {
+                scene.loseHp(dmg: damage)
+                if scene.checkGameOver() {
+                    scene.gameOver()
+                    return // Encerra a função se o jogo acabou
+                }
+            }
+            
             node.removeAction(forKey: "animation")
-            node.size = CGSize(width: 809/15, height: 1024/15)
+            node.size = CGSize(width: 809/30, height: 1024/30)
             node.texture = SKTexture(imageNamed: "playerDmg")
             node.physicsBody?.velocity = CGVector.zero
             node.zPosition = 3
@@ -189,5 +208,3 @@ class Player {
         }
     }
 }
-
-

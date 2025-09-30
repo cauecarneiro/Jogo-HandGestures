@@ -16,7 +16,11 @@ extension LevelOneScene {
             collideWithFloor()
         }
         
-                
+        //Fogo
+                if (contactA == PhysicsCategory.player && contactB == PhysicsCategory.fire) || (contactA == PhysicsCategory.fire && contactB == PhysicsCategory.player) {
+                    player.takeDamage(direction: 0, damage: 3)
+                }
+        
         if(contactA == PhysicsCategory.fruits && contactB == PhysicsCategory.player || contactB == PhysicsCategory.fruits && contactA == PhysicsCategory.player) {
             
             if(contactA == PhysicsCategory.fruits) {
@@ -87,5 +91,6 @@ struct PhysicsCategory {
     static let fruits: UInt32 = 1 << 6
     static let coins: UInt32 = 1 << 7
     static let slimeKing: UInt32 = 1 << 8
+    static let fire: UInt32 = 1 << 9  // 16
 }
 

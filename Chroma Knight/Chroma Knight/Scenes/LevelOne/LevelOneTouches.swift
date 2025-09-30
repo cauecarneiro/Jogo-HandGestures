@@ -35,7 +35,7 @@ extension LevelOneScene {
                     pauseNode.pauseButtonPressed()
                     togglePause()
                 case "resumeButton":
-                    pauseNode.pauseButtonPressed()
+                    pauseNode.resumeButtonPressed()
                     togglePause()
                 case "homeButton":
                     pauseNode.homeButtonPressed(scene: self)
