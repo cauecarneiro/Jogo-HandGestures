@@ -1,12 +1,8 @@
 import Foundation
 import SpriteKit
 import UIKit
-//import GoogleMobileAds
 
-class LevelOneScene: SKScene, SKPhysicsContactDelegate/*, GADFullScreenContentDelegate*/ {
-    
-    //for ads
-//    private var interstitial: GADInterstitialAd?
+class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     
     // Backgrounds
     var controllerBackground: SKSpriteNode
@@ -21,12 +17,6 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate/*, GADFullScreenContentDe
     //Player
     var player: Player
     
-    var slimes: [Slime] = []
-    var ghosts: [Ghost] = []
-    
-    //boss
-    var slimeKing: SlimeKing
-    
     var merchant: Merchant?
     //ground
     var ground: SKSpriteNode
@@ -38,7 +28,6 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate/*, GADFullScreenContentDe
     var leftWall: SKSpriteNode
     
     var scoreNode: SKLabelNode
-    var spawnNode: SKNode
     var pauseStatus: Bool = false
     var heartSprites: [SKSpriteNode] =  []
     
@@ -117,15 +106,12 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate/*, GADFullScreenContentDe
         scoreNode.fontName = appFont
         scoreNode.zPosition = 1
         
-        spawnNode = SKNode()
-        
         comboLabel = SKLabelNode(text: "")
         comboLabel.position = CGPoint(x: size.width/2, y: size.height - 50)
         comboLabel.fontColor = .white
         comboLabel.fontName = appFont
         comboLabel.zPosition = 1
         
-        slimeKing = SlimeKing(size: size)
         super.init(size: size)
         
         physicsWorld.gravity = CGVector(dx: 0, dy: -9.8)
@@ -143,52 +129,16 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate/*, GADFullScreenContentDe
         addChild(pauseNode)
         addChild(controllerBackground)
         addChild(background)
-        addChild(spawnNode)
         addChild(comboLabel)
         
         //new
-        spawnEnemy()
         initiateHp()
-        
-        let incDiff = SKAction.run {
-            self.dificulty += 1
-            if self.dificulty == 3 {
-                let newMerchant = Merchant(size: size, diff: self.dificulty)
-                self.merchant = newMerchant
-                self.run(SKAction.wait(forDuration: 15)) {
-                    if(!self.shopOpen) {
-                        self.closeShop()
-                    }
-                }
-                newMerchant.node.alpha = 0
-                self.addChild(newMerchant.node)
-                newMerchant.node.run(SKAction.fadeIn(withDuration: 0.5))
-            }
-            if self.dificulty == 4 {
-                self.slimeKing.isAlive = true
-                self.addChild(self.slimeKing.node)
-                self.slimeKing.spawn()
-            }
-        }
-        self.spawnNode.run(SKAction.repeatForever(SKAction.sequence([SKAction.wait(forDuration: 15), incDiff])))
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func sceneDidLoad() {
-        super.sceneDidLoad()
-//        let adUnitID = "ca-app-pub-1405347505060440/9572593172" // Coloque aqui o ID do seu bloco de anúncios
-//        GADInterstitialAd.load(withAdUnitID: adUnitID, request: GADRequest()) { [weak self] ad, error in
-//            if let error = error {
-//                print("Failed to load interstitial ad with error: \(error.localizedDescription)")
-//                return
-//            }
-//            self?.interstitial = ad
-//            self?.interstitial?.fullScreenContentDelegate = self
-//        }
-    }
     
     override func didMove(to view: SKView) {
         self.isUserInteractionEnabled = true
@@ -207,29 +157,12 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate/*, GADFullScreenContentDe
     }
     
     @objc func appWillEnterForeground() {
-        for slime in slimes {
-            slime.node.isPaused = pauseStatus
-        }
-        for ghost in ghosts {
-            ghost.node.isPaused = pauseStatus
-        }
         player.node.isPaused = pauseStatus
-        spawnNode.isPaused = pauseStatus
     }
     
     override func update(_ currentTime: TimeInterval) {
         calculatePlayerMovement()
-        calculateEnemyMovement()
-        checkSwordCollision(sword: player.sword.node)
-        if let swordNode = player.leftSword?.node {
-            checkSwordCollision(sword: swordNode)
-        }
         checkMerchantCollision()
-        checkGhostCollision()
-        
-        if slimeKing.isAlive {
-            checkSlimeKingCollision(slimeKing: slimeKing)
-        }
     }
     
     func initiateHp() {
@@ -274,10 +207,6 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate/*, GADFullScreenContentDe
     
     func checkGameOver() -> Bool {
         if(player.hp <= 0) {
-            if(UserDefaults.standard.integer(forKey: "highscore") < player.points) {
-                UserDefaults.standard.setValue(player.points, forKey: "highscore")
-            }
-            UserDefaults.standard.setValue(player.points, forKey: "lastscore")
             return true
         }
         return false
@@ -285,14 +214,7 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate/*, GADFullScreenContentDe
     
     func gameOver() {
         self.isPaused.toggle()
-//        if let interstitial = self.interstitial {
-//            if let viewController = self.view?.window?.rootViewController {
-//                interstitial.present(fromRootViewController: viewController)
-//            }
-//        } else {
-//            print("ad wasn't ready")
-            presentMenuScene()
-       // }
+        presentMenuScene()
     }
     
     //new
@@ -307,15 +229,8 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate/*, GADFullScreenContentDe
             self.physicsWorld.gravity = CGVector(dx: 0, dy: -9.8)
             self.physicsWorld.speed = 1.0
         }
-        for slime in slimes {
-            slime.node.isPaused = pauseStatus
-        }
-        for ghost in ghosts {
-            ghost.node.isPaused = pauseStatus
-        }
-        slimeKing.node.isPaused = pauseStatus
+        
         player.node.isPaused = pauseStatus
-        spawnNode.isPaused = pauseStatus
     }
     
     
@@ -329,50 +244,8 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate/*, GADFullScreenContentDe
             
         }
     }
-    func calculateEnemyMovement() {
-        for slime in slimes {
-            if(slime.node.position.x >= size.width + 10/* || slime.node.position.x <= -10*/) {
-                slime.node.position.x = size.width
-                //slime.node.position.y = size.height + slime.node.size.height
-            }
-            if(slime.node.position.x <= -10) {
-                slime.node.position.x = -10
-            }
-            slime.moveEnemy(direction: player.node.position.x >= slime.node.position.x ? 1 : -1)
-        }
-        for ghost in ghosts {
-            ghost.moveEnemy(direction: player.node.position.x >= ghost.node.position.x ? 1 : -1)
-        }
-    }
     
-    func spawnEnemy() {
-        let spawn = SKAction.run { [weak self] in
-            let diff = self?.dificulty ?? 1
-            let health = diff
-            let newSlime = Slime(hp: 1 + health, damage: 1, speed: CGFloat(8 + diff/2), level: diff)
-            let leftCorner = CGPoint(x: 0, y: (self?.ground.position.y ?? 0) + newSlime.node.size.height / 2 * 1.2)
-            let rightCorner = CGPoint(x: self?.size.width ?? 0, y: (self?.ground.position.y ?? 0) + newSlime.node.size.height / 2 * 1.2)
-            
-            let spawnPosition1 = Bool.random() ? rightCorner : leftCorner
-            var spawnPosition2 = Bool.random() ? rightCorner : leftCorner
-            
-            
-            spawnPosition2.y += (self?.size.height ?? 0)/4
-            newSlime.node.position = spawnPosition1
-            if(self?.slimes.count ?? 0 <= 4 + diff ) {
-                self?.slimes.append(newSlime)
-                self?.addChild(newSlime.node)
-            }
-            //new for adding ghost
-            if((diff >= 2) && (self?.ghosts.count ?? 0 < diff)) {
-                let newGhost = Ghost(hp: Int(health), damage: 1, speed: CGFloat((60 + diff)))
-                newGhost.node.position = spawnPosition2
-                self?.ghosts.append(newGhost)
-                self?.addChild(newGhost.node)
-            }
-        }
-        spawnNode.run(SKAction.repeatForever(SKAction.group([spawn, SKAction.wait(forDuration: 2.5)])))
-    }
+    
     func increaseScore() {
         player.increaseScore(points: dificulty)
         scoreNode.text = "\(player.points)"
@@ -383,7 +256,7 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate/*, GADFullScreenContentDe
         } else {
             comboLabel.text = "\(player.combo)"
         }
-        comboLabel.fontColor = generateColor(level: player.combo)
+        comboLabel.fontColor = .white
     }
     func openShop() {
         shopOpen = true
@@ -414,17 +287,6 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate/*, GADFullScreenContentDe
         merchant?.node.run(SKAction.sequence([SKAction.fadeOut(withDuration: 0.5), action]))
     }
     
-//    func loadInterstitialAd() {
-//        let adUnitID = "your-ad-unit-id" // Coloque aqui o ID do seu bloco de anúncios
-//        GADInterstitialAd.load(withAdUnitID: adUnitID, request: GADRequest()) { [weak self] ad, error in
-//            if let error = error {
-//                print("Failed to load interstitial ad with error: \(error.localizedDescription)")
-//                return
-//            }
-//            self?.interstitial = ad
-//            self?.interstitial?.fullScreenContentDelegate = self
-//        }
-//    }
     
     func presentMenuScene() {
         let scene = MenuScene(size: self.size)
@@ -432,15 +294,5 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate/*, GADFullScreenContentDe
         self.view?.presentScene(scene)
     }
     
-//    func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
-//        // Ad foi fechado, mudar para a próxima cena
-//        presentMenuScene()
-//    }
-//    
-//    func ad(_ ad: GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
-//        print("Ad failed to present with error: \(error.localizedDescription)")
-//        // Se o anúncio falhar ao ser apresentado, mudar para a próxima cena
-//        presentMenuScene()
-//    }
 }
 

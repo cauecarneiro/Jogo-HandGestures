@@ -120,15 +120,6 @@ class Player {
         node.physicsBody?.velocity = CGVector.zero
         node.physicsBody?.applyImpulse(vector)
     }
-    func incCombo() {
-        combo += 1
-        self.sword.node.color = generateColor(level: combo)
-        self.sword.node.colorBlendFactor = 0.8
-        if let leftSword = leftSword {
-            leftSword.node.color = generateColor(level: combo)
-            leftSword.node.colorBlendFactor = 0.8
-        }
-    }
     
     func jumpAttack() {
         if(!isJumpAttacking) {

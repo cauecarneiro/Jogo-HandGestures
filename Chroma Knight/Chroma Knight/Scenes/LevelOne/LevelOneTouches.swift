@@ -22,11 +22,6 @@ extension LevelOneScene {
                     vibrate(with: .light)
                     SoundManager.shared.playToggleSound()
                 }
-                if let scene = self.view?.scene {
-                    if(pauseNode.checkPauseNodePressed(scene: scene, touchedNode: touchedNode)) {
-                        togglePause()
-                    }
-                }
                 switch name {
                 case "leftButton":
                     leftButtonPressed(touch: touch)
@@ -36,6 +31,14 @@ extension LevelOneScene {
                     actionButtonPressed()
                 case "jumpAttackButton":
                     jumpAttackButtonPressed()
+                case "pauseButton":
+                    pauseNode.pauseButtonPressed()
+                    togglePause()
+                case "resumeButton":
+                    pauseNode.pauseButtonPressed()
+                    togglePause()
+                case "homeButton":
+                    pauseNode.homeButtonPressed(scene: self)
                 default:
                     break
                 }
@@ -157,3 +160,4 @@ extension LevelOneScene {
         actionButton.texture = SKTexture(imageNamed: "jumpAttackButtonPressed")
     }
 }
+

@@ -16,13 +16,6 @@ class MenuScene: SKScene {
     var playLabel: SKLabelNode
     var playButton: SKSpriteNode
     
-    var optionsButton: SKSpriteNode
-    var soundButton: SKSpriteNode
-    
-    var highscoreLabel: SKLabelNode
-    var highscore = UserDefaults.standard.integer(forKey: "highscore")
-    var lastScoreLabel: SKLabelNode
-    var lastScore = UserDefaults.standard.integer(forKey: "lastscore")
     
     override init(size: CGSize) {
     
@@ -37,21 +30,21 @@ class MenuScene: SKScene {
         background.alpha = 0.7
         background.name = "background"
         
-        titleLabel = SKLabelNode(text: "Chroma Knight")
+        titleLabel = SKLabelNode(text: "Braga Adventures")
         titleLabel.fontSize = 48
         titleLabel.fontName = "Retro Gaming"
         titleLabel.fontColor = .main
-        titleLabel.position = CGPoint(x: realSize.width/2, y: realSize.height/1.5)
+        titleLabel.position = CGPoint(x: realSize.width/2, y: realSize.height/1.3)
         
-        titleShadow = SKLabelNode(text: "Chroma Knight")
+        titleShadow = SKLabelNode(text: "Braga Adventures")
         titleShadow.fontSize = 48
         titleShadow.fontName = "Retro Gaming"
         titleShadow.fontColor = .black
         titleShadow.position = CGPoint(x: titleLabel.position.x + 3, y: titleLabel.position.y - 5)
                
         playButton = SKSpriteNode(imageNamed: "playButton")
-        playButton.scale(to: CGSize(width: 200, height: 100))
-        playButton.position = CGPoint(x: realSize.width/2, y: realSize.height/2.5)
+        playButton.scale(to: CGSize(width: 200, height: 50))
+        playButton.position = CGPoint(x: realSize.width/2, y: realSize.height/10)
         playButton.zPosition = 0
         playButton.name = "playButton"
                 
@@ -59,50 +52,17 @@ class MenuScene: SKScene {
         playLabel.fontColor = .black
         playLabel.fontSize = 24
         playLabel.fontName = "Retro Gaming"
-        playLabel.position = CGPoint(x: playButton.position.x, y: playButton.position.y + 5)
+        playLabel.position = CGPoint(x: playButton.position.x, y: playButton.position.y)
         playLabel.name = "playButton"
         
-        optionsButton = SKSpriteNode(imageNamed: "optionsButton")
-        optionsButton.scale(to: CGSize(width: 50, height: 50))
-        optionsButton.position = CGPoint(x: realSize.width - 75, y: realSize.height - 50)
-        optionsButton.zPosition = 0
-        optionsButton.name = "optionsButton"
         
-        soundButton = SKSpriteNode(imageNamed: "soundButton")
-        if(!SoundManager.shared.soundEnabled) {
-            soundButton.texture = SKTexture(imageNamed: "soundButtonOff")
-        }
-        soundButton.scale(to: CGSize(width: 50, height: 50))
-        soundButton.position = CGPoint(x: 75, y: realSize.height - 50)
-        soundButton.zPosition = 0
-        soundButton.name = "soundButton"
-        
-        highscoreLabel = SKLabelNode(text: "Highscore: \(highscore)")
-        highscoreLabel.fontColor = .white
-        highscoreLabel.fontName = appFont
-        highscoreLabel.fontSize = 24
-        highscoreLabel.position = CGPoint(x: 50, y: 25)
-        highscoreLabel.zPosition = 1
-        highscoreLabel.horizontalAlignmentMode = .left
-        
-        lastScoreLabel = SKLabelNode(text: "Last Score: \(lastScore)")
-        lastScoreLabel.fontColor = .white
-        lastScoreLabel.fontName = appFont
-        lastScoreLabel.fontSize = 24
-        lastScoreLabel.position = CGPoint(x: highscoreLabel.position.x, y: highscoreLabel.position.y + 30)
-        lastScoreLabel.zPosition = 1
-        lastScoreLabel.horizontalAlignmentMode = .left
         super.init(size: realSize)
         SoundManager.soundTrack.playSoundtrack()
-        addChild(soundButton)
         addChild(background)
         addChild(playButton)
-        addChild(optionsButton)
         addChild(titleShadow)
         addChild(titleLabel)
         addChild(playLabel)
-        addChild(highscoreLabel)
-        addChild(lastScoreLabel)
     }
     
 
@@ -135,15 +95,6 @@ class MenuScene: SKScene {
                     animateButton(button: playButton)
                     playLabel.position.y -= 10
                     transitionToNextScene(scene: levelOneScene)
-                case "optionsButton":
-                    let optionsScene = OptionsScene(size: self.size)
-                    optionsScene.scaleMode = self.scaleMode
-                    animateButton(button: optionsButton)
-                    transitionToNextScene(scene: optionsScene)
-                case "soundButton":
-                    SoundManager.shared.changeSound()
-                    animateSoundButton(button: soundButton, isOn: SoundManager.shared.soundEnabled)
-                    SoundManager.soundTrack.playSoundtrack()
                 default:
                     break
                 }

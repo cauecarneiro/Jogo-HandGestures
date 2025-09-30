@@ -19,28 +19,5 @@ func deactivateButton(button: SKSpriteNode) {
     button.texture = SKTexture(imageNamed: button.name ?? "")
 }
 
-func animateToggle(toggle: SKSpriteNode, isOn: Bool) {
-    toggle.texture = SKTexture(imageNamed: "toggleTransition")
-    toggle.run(waitForAnimation) {
-        if(isOn) {
-            toggle.texture = SKTexture(imageNamed: "toggleOn")
-        } else {
-            toggle.texture = SKTexture(imageNamed: "toggleOff")
-        }
-        
-    }
-    
-}
-
-func animateSoundButton(button: SKSpriteNode, isOn: Bool) {
-    button.texture = SKTexture(imageNamed: "soundButtonPressed")
-    button.run(waitForAnimation) {
-        if(isOn) {
-            button.texture = SKTexture(imageNamed: "soundButton")
-        } else {
-            button.texture = SKTexture(imageNamed: "soundButtonOff")
-        }
-    }
-}
 
 

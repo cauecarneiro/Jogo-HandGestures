@@ -28,11 +28,9 @@ enum HapticFeedbackStrength {
 }
 
 func vibrate(with strength: HapticFeedbackStrength) {
-    if(UserConfig.shared.vibration) {
-        if #available(iOS 10.0, *) {
-            let generator = UIImpactFeedbackGenerator(style: strength.style)
-            generator.prepare()
-            generator.impactOccurred()
-        }
+    if #available(iOS 10.0, *) {
+        let generator = UIImpactFeedbackGenerator(style: strength.style)
+        generator.prepare()
+        generator.impactOccurred()
     }
 }
