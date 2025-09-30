@@ -29,8 +29,6 @@ extension LevelOneScene {
                     rightButtonPressed(touch: touch)
                 case "actionButton":
                     actionButtonPressed()
-                case "jumpAttackButton":
-                    jumpAttackButtonPressed()
                 case "pauseButton":
                     pauseNode.pauseButtonPressed()
                     togglePause()
@@ -153,11 +151,6 @@ extension LevelOneScene {
         player.playerJump()
         actionButton.name = "jumpAttackButton"
         actionButton.texture = SKTexture(imageNamed: "jumpAttackButton")
-    }
-    func jumpAttackButtonPressed() {
-        pressingJumpAttack = true
-        player.jumpAttack()
-        actionButton.texture = SKTexture(imageNamed: "jumpAttackButtonPressed")
-    }
+    }git a
 }
 

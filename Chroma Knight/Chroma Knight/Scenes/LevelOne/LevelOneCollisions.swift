@@ -66,18 +66,6 @@ extension LevelOneScene {
             }
         }
     }
-    
-    func checkMerchantCollision() {
-        guard let merchant = self.merchant else { 
-            return
-        }
-        
-        if(player.node.intersects(merchant.node)) {
-            openShop()
-        }
-    }
-
-    
 }
 
 struct PhysicsCategory {

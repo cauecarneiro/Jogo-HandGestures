@@ -17,7 +17,6 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     //Player
     var player: Player
     
-    var merchant: Merchant?
     //ground
     var ground: SKSpriteNode
     
@@ -79,7 +78,7 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         actionButton.name = "actionButton"
         
         
-        player = Player(size: size, sword: Sword(damage: 1, size: size, type: .basic))
+        player = Player(size: size)
         ground = SKSpriteNode(color: .clear, size: CGSize(width: size.width * 2, height: 10))
         ground.position = CGPoint(x: size.width/2, y: player.node.position.y - player.node.size.height/1.8)
         ground.physicsBody = SKPhysicsBody(rectangleOf: ground.size)
@@ -332,7 +331,6 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
         calculatePlayerMovement()
-        checkMerchantCollision()
     }
     
     func loseHp(dmg: Int) {
@@ -410,34 +408,7 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         }
         comboLabel.fontColor = .white
     }
-    func openShop() {
-        shopOpen = true
-        let newSword = arc4random_uniform(3)
-        var type = SwordType.basic
-        switch newSword {
-        case 0:
-            type = .katana
-        case 1:
-            type = .void
-        case 2:
-            type = .dagger
-        default:
-            type = .void
-            
-        }
-        
-        player.changeSword(sword: Sword(damage: 2, size: size, type: type), size: size)
-        closeShop()
-    }
     
-    func closeShop() {
-        let action = SKAction.run {
-            self.merchant?.node.removeFromParent()
-            self.merchant = nil
-        }
-        self.shopOpen = false
-        merchant?.node.run(SKAction.sequence([SKAction.fadeOut(withDuration: 0.5), action]))
-    }
     
     
     func presentMenuScene() {
