@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4BA3AFCD2E8C713A001A8229 /* HandPose in Frameworks */ = {isa = PBXBuildFile; productRef = 4BA3AFCC2E8C713A001A8229 /* HandPose */; };
 		A74ED31F2C11DD2800A83E2A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A74ED31E2C11DD2800A83E2A /* AppDelegate.swift */; };
 		A74ED3272C11DD2800A83E2A /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A74ED3262C11DD2800A83E2A /* GameViewController.swift */; };
 		A74ED32A2C11DD2800A83E2A /* Base in Resources */ = {isa = PBXBuildFile; fileRef = A74ED3292C11DD2800A83E2A /* Base */; };
@@ -55,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BA3AFCD2E8C713A001A8229 /* HandPose in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,6 +162,7 @@
 			);
 			name = "Chroma Knight";
 			packageProductDependencies = (
+				4BA3AFCC2E8C713A001A8229 /* HandPose */,
 			);
 			productName = "Chroma Knight";
 			productReference = A74ED31B2C11DD2800A83E2A /* Chroma Knight.app */;
@@ -190,6 +193,7 @@
 			);
 			mainGroup = A74ED3122C11DD2800A83E2A;
 			packageReferences = (
+				4BA3AFCB2E8C713A001A8229 /* XCRemoteSwiftPackageReference "HandPose" */,
 			);
 			productRefGroup = A74ED31C2C11DD2800A83E2A /* Products */;
 			projectDirPath = "";
@@ -385,11 +389,12 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.3;
-				DEVELOPMENT_TEAM = 8B7F7G3Y2U;
+				DEVELOPMENT_TEAM = J9B4KWG8QK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Chroma-Knight-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Braga Adventures";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.adventure-games";
+				INFOPLIST_KEY_NSCameraUsageDescription = Acesso;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -401,7 +406,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.4;
-				PRODUCT_BUNDLE_IDENTIFIER = com.tpdias.ChromaKnightMobile;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tpdias.ChromaKnightMobilee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -422,11 +427,12 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.3;
-				DEVELOPMENT_TEAM = 8B7F7G3Y2U;
+				DEVELOPMENT_TEAM = J9B4KWG8QK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Chroma-Knight-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Braga Adventures";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.adventure-games";
+				INFOPLIST_KEY_NSCameraUsageDescription = Acesso;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -438,7 +444,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.4;
-				PRODUCT_BUNDLE_IDENTIFIER = com.tpdias.ChromaKnightMobile;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tpdias.ChromaKnightMobilee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -473,6 +479,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4BA3AFCB2E8C713A001A8229 /* XCRemoteSwiftPackageReference "HandPose" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/debCristina/HandPose.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4BA3AFCC2E8C713A001A8229 /* HandPose */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BA3AFCB2E8C713A001A8229 /* XCRemoteSwiftPackageReference "HandPose" */;
+			productName = HandPose;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A74ED3132C11DD2800A83E2A /* Project object */;
 }

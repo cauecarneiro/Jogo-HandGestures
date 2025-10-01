@@ -1,16 +1,16 @@
 import Foundation
 import SpriteKit
 import UIKit
-
+import HandPose
 class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     
     // Backgrounds
     var controllerBackground: SKSpriteNode
     var background: SKSpriteNode
     // Controller
-    var leftButton: SKSpriteNode
-    var rightButton: SKSpriteNode
-    var actionButton: SKSpriteNode
+//    var leftButton: SKSpriteNode
+//    var rightButton: SKSpriteNode
+//    var actionButton: SKSpriteNode
     
     var activeTouches: [UITouch: SKSpriteNode] = [:] // Dictionary to track touches and their corresponding buttons
     var pressingJumpAttack: Bool = false
@@ -31,10 +31,12 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     var pauseStatus: Bool = false
     var heartSprites: [SKSpriteNode] =  []
     
-    var dificulty = 1
-    var shopOpen = false
+//    var dificulty = 1
+//    var shopOpen = false
+//    
+//    var comboLabel: SKLabelNode
     
-    var comboLabel: SKLabelNode
+    var arController = ARViewController(cameraFrame: CGRect(x:100, y: 100, width: 100, height: 100), showPreview: true)
     
     
     override init(size: CGSize) {
@@ -51,26 +53,26 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         pauseNode = PauseNode(size: size)
         pauseNode.zPosition = 5
         
-        let buttonsX = 100.0
-        let buttonsSize: CGFloat = 100
-        let buttonsHeight = size.height / 3 - buttonsSize / 1.5
-        leftButton = SKSpriteNode(imageNamed: "leftButton")
-        leftButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
-        leftButton.position = CGPoint(x: buttonsX, y: buttonsHeight)
-        leftButton.zPosition = 2
-        leftButton.name = "leftButton"
+//        let buttonsX = 100.0
+//        let buttonsSize: CGFloat = 100
+//        let buttonsHeight = size.height / 3 - buttonsSize / 1.5
+//        leftButton = SKSpriteNode(imageNamed: "leftButton")
+//        leftButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
+//        leftButton.position = CGPoint(x: buttonsX, y: buttonsHeight)
+//        leftButton.zPosition = 2
+//        leftButton.name = "leftButton"
+//        
+//        rightButton = SKSpriteNode(imageNamed: "rightButton")
+//        rightButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
+//        rightButton.position = CGPoint(x: buttonsX + buttonsSize * 1.5, y: buttonsHeight)
+//        rightButton.zPosition = 2
+//        rightButton.name = "rightButton"
         
-        rightButton = SKSpriteNode(imageNamed: "rightButton")
-        rightButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
-        rightButton.position = CGPoint(x: buttonsX + buttonsSize * 1.5, y: buttonsHeight)
-        rightButton.zPosition = 2
-        rightButton.name = "rightButton"
-        
-        actionButton = SKSpriteNode(imageNamed: "actionButton")
-        actionButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
-        actionButton.position = CGPoint(x: size.width - buttonsX * 1.1, y: buttonsHeight)
-        actionButton.zPosition = 2
-        actionButton.name = "actionButton"
+//        actionButton = SKSpriteNode(imageNamed: "actionButton")
+//        actionButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
+//        actionButton.position = CGPoint(x: size.width - buttonsX * 1.1, y: buttonsHeight)
+//        actionButton.zPosition = 2
+//        actionButton.name = "actionButton"
         
         
         player = Player(size: size, sword: Sword(damage: 1, size: size, type: .basic))
@@ -106,11 +108,11 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         scoreNode.fontName = appFont
         scoreNode.zPosition = 1
         
-        comboLabel = SKLabelNode(text: "")
-        comboLabel.position = CGPoint(x: size.width/2, y: size.height - 50)
-        comboLabel.fontColor = .white
-        comboLabel.fontName = appFont
-        comboLabel.zPosition = 1
+//        comboLabel = SKLabelNode(text: "")
+//        comboLabel.position = CGPoint(x: size.width/2, y: size.height - 50)
+//        comboLabel.fontColor = .white
+//        comboLabel.fontName = appFont
+//        comboLabel.zPosition = 1
         
         super.init(size: size)
         
@@ -123,13 +125,13 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         addChild(rightWall)
         addChild(scoreNode)
         addChild(player.node)
-        addChild(leftButton)
-        addChild(rightButton)
-        addChild(actionButton)
+//        addChild(leftButton)
+//        addChild(rightButton)
+//        addChild(actionButton)
         addChild(pauseNode)
         addChild(controllerBackground)
         addChild(background)
-        addChild(comboLabel)
+//        addChild(comboLabel)
         
         //new
         initiateHp()
@@ -144,6 +146,14 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         self.isUserInteractionEnabled = true
         NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        
+        if let cameraFrame = self.arController.view {
+            cameraFrame.backgroundColor = .clear
+            cameraFrame.frame = view.bounds
+            view.addSubview(cameraFrame)
+            
+            view.superview?.sendSubviewToBack(view)
+        }
     }
     
     override func willMove(from view: SKView) {
@@ -236,12 +246,21 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     
     
     func calculatePlayerMovement() {
-        if(activeTouches.values.contains(leftButton)) {
+//        if(activeTouches.values.contains(leftButton)) {
+//            player.movePlayer(direction: -1, maxWidth: size.width)
+//        }
+//        if(activeTouches.values.contains(rightButton)) {
+//            
+//            player.movePlayer(direction: 1, maxWidth: size.width)
+//            
+//        }
+        
+        if(arController.currentHandState == .closed) {
             player.movePlayer(direction: -1, maxWidth: size.width)
         }
-        if(activeTouches.values.contains(rightButton)) {
+        
+        if(arController.currentHandState == .open) {
             player.movePlayer(direction: 1, maxWidth: size.width)
-            
         }
     }
     

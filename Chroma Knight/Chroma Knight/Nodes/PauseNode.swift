@@ -16,7 +16,7 @@ class PauseNode: SKNode {
     
     init(size: CGSize) {
         
-        pauseButton = SKSpriteNode(imageNamed: "PauseButtom")
+        pauseButton = SKSpriteNode(imageNamed: "PauseButton")
         pauseButton.scale(to: CGSize(width: 48, height: 48))
         pauseButton.position = CGPoint(x: size.width - 70, y: size.height - 70)
         pauseButton.name = "pauseButton"
@@ -54,10 +54,10 @@ class PauseNode: SKNode {
 
     
     func pauseButtonPressed() {
-        self.pauseButton.texture = SKTexture(imageNamed: "PauseButtomPressed")
+        self.pauseButton.texture = SKTexture(imageNamed: "PauseButtonPressed")
         pauseButton.run(waitForAnimation) {
             UserConfig.shared.changePause()
-            self.pauseButton.texture = SKTexture(imageNamed: "PauseButtom")
+            self.pauseButton.texture = SKTexture(imageNamed: "PauseButton")
             self.resumeButton.texture = SKTexture(imageNamed: "resumeButton")
             if(UserConfig.shared.userPause) {
                 self.addChild(self.resumeButton)

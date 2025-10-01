@@ -1,0 +1,15 @@
+{
+  "originHash" : "ca596444046ffb0b497adaa36aedccb08a287858d0674bb86263daa25cbfa7bd",
+  "pins" : [
+    {
+      "identity" : "handpose",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/debCristina/HandPose.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "b7faedbc28551818df1cf91bddd10cf71b025daa"
+      }
+    }
+  ],
+  "version" : 3
+}

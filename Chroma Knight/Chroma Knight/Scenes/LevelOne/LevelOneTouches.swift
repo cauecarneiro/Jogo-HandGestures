@@ -7,6 +7,7 @@
 
 import Foundation
 import SpriteKit
+import HandPose
 
 extension LevelOneScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -130,12 +131,24 @@ extension LevelOneScene {
         }
         
     }
+    func handClosedDetected(handState: HandState) {
+        if handState == .closed {
+            if arController.currentHandState == .closed {
+                vibrate(with: .light)
+                animateButton(button: leftButton)
+                player.animateWalk()
+                                
+            }
+        }
+    }
     
     func leftButtonPressed(touch: UITouch) {
         vibrate(with: .light)
         activeTouches[touch] = leftButton
         animateButton(button: leftButton)
         player.animateWalk()
+        
+        
     }
     
     func rightButtonPressed(touch: UITouch) {
