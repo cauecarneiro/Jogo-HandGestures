@@ -1,36 +1,36 @@
+////
+////  Haptics.swift
+////  Chroma Knight
+////
+////  Created by Thiago Parisotto on 17/06/24.
+////
 //
-//  Haptics.swift
-//  Chroma Knight
+//import Foundation
+//import UIKit
 //
-//  Created by Thiago Parisotto on 17/06/24.
+//enum HapticFeedbackStrength {
+//    case light
+//    case medium
+//    case heavy
+//    case soft
+//    case rigid
+//    
+//    fileprivate var style: UIImpactFeedbackGenerator.FeedbackStyle {
+//        switch self {
+//        case .light, .soft:
+//            return .light
+//        case .medium:
+//            return .medium
+//        case .heavy, .rigid:
+//            return .heavy
+//        }
+//    }
+//}
 //
-
-import Foundation
-import UIKit
-
-enum HapticFeedbackStrength {
-    case light
-    case medium
-    case heavy
-    case soft
-    case rigid
-    
-    fileprivate var style: UIImpactFeedbackGenerator.FeedbackStyle {
-        switch self {
-        case .light, .soft:
-            return .light
-        case .medium:
-            return .medium
-        case .heavy, .rigid:
-            return .heavy
-        }
-    }
-}
-
-func vibrate(with strength: HapticFeedbackStrength) {
-    if #available(iOS 10.0, *) {
-        let generator = UIImpactFeedbackGenerator(style: strength.style)
-        generator.prepare()
-        generator.impactOccurred()
-    }
-}
+//func vibrate(with strength: HapticFeedbackStrength) {
+//    if #available(iOS 10.0, *) {
+//        let generator = UIImpactFeedbackGenerator(style: strength.style)
+//        generator.prepare()
+//        generator.impactOccurred()
+//    }
+//}

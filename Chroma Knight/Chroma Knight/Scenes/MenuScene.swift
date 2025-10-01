@@ -57,7 +57,7 @@ class MenuScene: SKScene {
         
         
         super.init(size: realSize)
-        SoundManager.soundTrack.playSoundtrack()
+//        SoundManager.soundTrack.playSoundtrack()
         addChild(background)
         addChild(playButton)
         addChild(titleShadow)
@@ -80,12 +80,12 @@ class MenuScene: SKScene {
             let touchedNode = atPoint(location)
             if let name = touchedNode.name {
                 if(name.contains("Button") ) {
-                    vibrate(with: .light)
-                    SoundManager.shared.playButtonSound()
+//                    vibrate(with: .light)
+//                    SoundManager.shared.playButtonSound()
                 }
                 if(name.contains("Toggle")) {
-                    vibrate(with: .light)
-                    SoundManager.shared.playToggleSound()
+//                    vibrate(with: .light)
+//                    SoundManager.shared.playToggleSound()
                 }
                 
                 switch name {

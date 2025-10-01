@@ -8,6 +8,8 @@
 import Foundation
 import SpriteKit
 import SwiftUI
+import HandGesturesClassifier
+
 
 class Player {
     var node: SKSpriteNode
@@ -16,23 +18,17 @@ class Player {
     //jump
     var isJumping: Bool = false
     var jumpForce: CGFloat = 56.0
+
     
 
     //textures
     var textures: [SKTexture] = []
     var walkingTextures: [SKTexture] = []
-    
-    //jumpAttack
-    var isJumpAttacking = false
-    
+        
     
     var hp: Int = 3
     var maxHP: Int = 3
     var damageCD = false
-    
-    //new
-    var points: Int = 0
-    var combo: Int = 0
     
     init(size: CGSize) {
         self.movementSpeed = 2.0
@@ -60,12 +56,12 @@ class Player {
         animatePlayer()
     }
     
-    func increaseScore(points: Int) {
-        self.points += points
-    }
+
     func incHp(hp: Int) {
         self.hp += hp
     }
+    
+    
     func animatePlayer() {
         if(!isJumping) {
             if(!damageCD) {
@@ -96,7 +92,6 @@ class Player {
                 node.size = CGSize(width: 809/10, height: 1024/10)
                 node.texture = SKTexture(imageNamed: "playerJumping")
             }
-            if isJumping && !isJumpAttacking { return }
             isJumping = true
             impulsePlayer(vector: CGVector(dx: 0, dy: jumpForce))
         }
@@ -110,9 +105,8 @@ class Player {
 
     func collideWithFloor() {
         isJumping = false
-        isJumpAttacking = false
-        combo = 0
     }
+    
     func takeDamage(direction: CGFloat, damage: Int) {
         if(!damageCD) {
             hp -= damage
