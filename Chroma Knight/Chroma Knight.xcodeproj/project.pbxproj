@@ -385,7 +385,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.3;
-				DEVELOPMENT_TEAM = 547VUZ3B6X;
+				DEVELOPMENT_TEAM = 3YGP7G4NST;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Chroma-Knight-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Braga Adventures";
@@ -424,7 +424,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.3;
-				DEVELOPMENT_TEAM = 547VUZ3B6X;
+				DEVELOPMENT_TEAM = 3YGP7G4NST;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Chroma-Knight-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Braga Adventures";
