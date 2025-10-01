@@ -9,18 +9,41 @@ import Foundation
 import SpriteKit
 
 class PauseNode: SKNode {
-    var pauseButton: SKSpriteNode
+    var pauseButton: SKShapeNode
     var resumeButton: SKSpriteNode
     var homeButton: SKSpriteNode
     var blackBackground: SKSpriteNode
     
     init(size: CGSize) {
         
-        pauseButton = SKSpriteNode(imageNamed: "PauseButtom")
-        pauseButton.scale(to: CGSize(width: 48, height: 48))
-        pauseButton.position = CGPoint(x: size.width - 70, y: size.height - 70)
-        pauseButton.name = "pauseButton"
-        pauseButton.zPosition = 1
+        let diameter: CGFloat = 48
+        let circle = SKShapeNode(circleOfRadius: diameter / 2)
+        circle.fillColor = SKColor(white: 1.0, alpha: 0.15) // leve transparência
+        circle.strokeColor = SKColor(white: 1.0, alpha: 0.3)
+        circle.lineWidth = 2
+        circle.position = CGPoint(x: size.width - 70, y: size.height - 70)
+        circle.name = "pauseButton"
+        circle.zPosition = 1
+        
+        // Barras do ícone de pause
+        let barWidth = diameter * 0.16
+        let barHeight = diameter * 0.5
+        let cornerRadius = barWidth * 0.6
+        
+        let leftBar = SKShapeNode(rectOf: CGSize(width: barWidth, height: barHeight), cornerRadius: cornerRadius)
+        leftBar.fillColor = SKColor(white: 1.0, alpha: 0.9)
+        leftBar.strokeColor = .clear
+        leftBar.position = CGPoint(x: -barWidth, y: 0)
+        
+        let rightBar = SKShapeNode(rectOf: CGSize(width: barWidth, height: barHeight), cornerRadius: cornerRadius)
+        rightBar.fillColor = SKColor(white: 1.0, alpha: 0.9)
+        rightBar.strokeColor = .clear
+        rightBar.position = CGPoint(x: barWidth, y: 0)
+        
+        circle.addChild(leftBar)
+        circle.addChild(rightBar)
+        
+        pauseButton = circle
         
         let pairOffset: CGFloat = 110
         resumeButton = SKSpriteNode(imageNamed: "resumeButton")
@@ -54,12 +77,14 @@ class PauseNode: SKNode {
 
     
     func pauseButtonPressed() {
-        self.pauseButton.texture = SKTexture(imageNamed: "PauseButtomPressed")
+        self.pauseButton.run(SKAction.sequence([
+            SKAction.scale(to: 0.9, duration: 0.06),
+            SKAction.scale(to: 1.0, duration: 0.10)
+        ]))
+        
         pauseButton.run(waitForAnimation) {
             UserConfig.shared.changePause()
-            self.pauseButton.texture = SKTexture(imageNamed: "PauseButtom")
-            self.resumeButton.texture = SKTexture(imageNamed: "resumeButton")
-            if(UserConfig.shared.userPause) {
+            if UserConfig.shared.userPause {
                 self.addChild(self.resumeButton)
                 self.addChild(self.homeButton)
                 self.addChild(self.blackBackground)
@@ -81,8 +106,6 @@ class PauseNode: SKNode {
             self.blackBackground.removeFromParent()
             self.resumeButton.removeFromParent()
             self.homeButton.removeFromParent()
-            // Reset pause button appearance
-            self.pauseButton.texture = SKTexture(imageNamed: "PauseButtom")
         }
     }
     
@@ -98,4 +121,3 @@ class PauseNode: SKNode {
     }
     
 }
-
