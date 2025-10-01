@@ -5,6 +5,8 @@ import HandGesturesClassifier
 
 class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     
+    var arVC: ARViewController?
+    
     // Backgrounds
     var controllerBackground: SKSpriteNode
     var background: SKSpriteNode
@@ -34,7 +36,11 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
 
     var gestureDirection: CGFloat = 0 // -1 = para trás, 0 = parado, 1 = para frente
     
+//    let arVC = ARViewController(cameraFrame: CGRect(x: 0, y: 0, width: 150, height: 200), isCameraHidden: true)
+//    
     override init(size: CGSize) {
+        
+        
         controllerBackground = SKSpriteNode(imageNamed: "controllerBackground")
         controllerBackground.scale(to: CGSize(width: size.width, height: size.height / 3))
         controllerBackground.position = CGPoint(x: size.width / 2, y: size.height / 2 - size.height / 2.7)
@@ -297,6 +303,15 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         self.isUserInteractionEnabled = true
         NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        
+        
+//        if let cameraFrame = self.arVC.view {
+//            cameraFrame.backgroundColor = .clear
+//            cameraFrame.frame = view.bounds
+//            view.addSubview(cameraFrame)
+//            
+//            view.superview?.sendSubviewToBack(view)
+//        }
     }
     
     override func willMove(from view: SKView) {

@@ -9,9 +9,9 @@ import HandGesturesClassifier
 
 class GameViewController: UIViewController {
     
-    //instanciando a ARViewController
-    let arVC = ARViewController(cameraFrame: CGRect(x: 0, y: 0, width: 150, height: 200), isCameraHidden: false)
-    
+//    //instanciando a ARViewController
+    let arVC = ARViewController(cameraFrame: CGRect(x: 0, y: 0, width: 150, height: 200), isCameraHidden: true)
+//    
     
     
     override func viewDidLoad() {
@@ -49,6 +49,7 @@ class GameViewController: UIViewController {
     override var prefersStatusBarHidden: Bool {
         return true
     }
+    
     override var prefersHomeIndicatorAutoHidden: Bool {
         return true
     }

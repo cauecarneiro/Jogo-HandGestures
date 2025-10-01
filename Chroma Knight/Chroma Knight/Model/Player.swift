@@ -2,8 +2,6 @@
 //  Player.swift
 //  Chroma Knight
 //
-//  Created by Thiago Parisotto on 18/06/24.
-//
 
 import Foundation
 import SpriteKit
@@ -79,12 +77,14 @@ class Player {
             }
         }
     }
+    
     func movePlayer(direction: CGFloat, maxWidth: CGFloat) {
         if(node.position.x <= (maxWidth - node.size.width/2) && direction == 1 || node.position.x >= (node.size.width/2) && direction == -1) {
             node.position.x += movementSpeed * direction
             node.xScale = direction
         }
     }
+    
     func playerJump() {
         if(!isJumping) {
             if(!damageCD) {
