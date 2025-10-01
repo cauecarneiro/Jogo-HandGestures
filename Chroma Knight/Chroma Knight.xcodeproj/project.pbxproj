@@ -23,6 +23,8 @@
 		A77A8EFB2C20E4BC002C8E5B /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = A77A8EFA2C20E4BC002C8E5B /* Haptics.swift */; };
 		A7E5C0AF2C54346C00E661B2 /* LevelOneCollisions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E5C0AE2C54346C00E661B2 /* LevelOneCollisions.swift */; };
 		A7E5C0B12C5434FE00E661B2 /* LevelOneTouches.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E5C0B02C5434FE00E661B2 /* LevelOneTouches.swift */; };
+		CE2210D02E8CD78500F0E605 /* HandGesturesClassifier in Frameworks */ = {isa = PBXBuildFile; productRef = CE2210CF2E8CD78500F0E605 /* HandGesturesClassifier */; };
+		CE2210E32E8CE57E00F0E605 /* EmotionClassification in Frameworks */ = {isa = PBXBuildFile; productRef = CE2210E22E8CE57E00F0E605 /* EmotionClassification */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +53,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE2210E32E8CE57E00F0E605 /* EmotionClassification in Frameworks */,
+				CE2210D02E8CD78500F0E605 /* HandGesturesClassifier in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,6 +158,8 @@
 			);
 			name = "Chroma Knight";
 			packageProductDependencies = (
+				CE2210CF2E8CD78500F0E605 /* HandGesturesClassifier */,
+				CE2210E22E8CE57E00F0E605 /* EmotionClassification */,
 			);
 			productName = "Chroma Knight";
 			productReference = A74ED31B2C11DD2800A83E2A /* Chroma Knight.app */;
@@ -184,6 +190,8 @@
 			);
 			mainGroup = A74ED3122C11DD2800A83E2A;
 			packageReferences = (
+				CE2210CE2E8CD78500F0E605 /* XCRemoteSwiftPackageReference "HandGesturesClassifier" */,
+				CE2210E12E8CE57E00F0E605 /* XCRemoteSwiftPackageReference "emotion-classification" */,
 			);
 			productRefGroup = A74ED31C2C11DD2800A83E2A /* Products */;
 			projectDirPath = "";
@@ -377,14 +385,16 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.3;
-				DEVELOPMENT_TEAM = 8B7F7G3Y2U;
+				DEVELOPMENT_TEAM = 547VUZ3B6X;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Chroma-Knight-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Braga Adventures";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.adventure-games";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Preciso usar a camera para detectar a posição da mao para andar com o player";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = "\"\"";
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
@@ -414,14 +424,16 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.3;
-				DEVELOPMENT_TEAM = 8B7F7G3Y2U;
+				DEVELOPMENT_TEAM = 547VUZ3B6X;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Chroma-Knight-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Braga Adventures";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.adventure-games";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Preciso usar a camera para detectar a posição da mao para andar com o player";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = "\"\"";
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
@@ -465,6 +477,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CE2210CE2E8CD78500F0E605 /* XCRemoteSwiftPackageReference "HandGesturesClassifier" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/brenomarq/HandGesturesClassifier";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.9;
+			};
+		};
+		CE2210E12E8CE57E00F0E605 /* XCRemoteSwiftPackageReference "emotion-classification" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jfelipeschwaab/emotion-classification.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CE2210CF2E8CD78500F0E605 /* HandGesturesClassifier */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE2210CE2E8CD78500F0E605 /* XCRemoteSwiftPackageReference "HandGesturesClassifier" */;
+			productName = HandGesturesClassifier;
+		};
+		CE2210E22E8CE57E00F0E605 /* EmotionClassification */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE2210E12E8CE57E00F0E605 /* XCRemoteSwiftPackageReference "emotion-classification" */;
+			productName = EmotionClassification;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A74ED3132C11DD2800A83E2A /* Project object */;
 }

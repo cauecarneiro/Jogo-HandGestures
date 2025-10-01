@@ -1,15 +1,18 @@
 import Foundation
 import SpriteKit
 import UIKit
+import HandGesturesClassifier
 
 class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     
     // Backgrounds
     var controllerBackground: SKSpriteNode
     var background: SKSpriteNode
+    
+    
     // Controller
-    var leftButton: SKSpriteNode
-    var rightButton: SKSpriteNode
+//    var leftButton: SKSpriteNode
+//    var rightButton: SKSpriteNode
     var actionButton: SKSpriteNode
     
     var activeTouches: [UITouch: SKSpriteNode] = [:] // Dictionary to track touches and their corresponding buttons
@@ -26,15 +29,10 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     var rightWall: SKSpriteNode
     var leftWall: SKSpriteNode
     
-    var scoreNode: SKLabelNode
     var pauseStatus: Bool = false
     var heartSprites: [SKSpriteNode] =  []
-    
-    var dificulty = 1
-    var shopOpen = false
-    
-    var comboLabel: SKLabelNode
-    
+
+    var gestureDirection: CGFloat = 0 // -1 = para trás, 0 = parado, 1 = para frente
     
     override init(size: CGSize) {
         controllerBackground = SKSpriteNode(imageNamed: "controllerBackground")
@@ -59,17 +57,17 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         let buttonsX = 100.0
         let buttonsSize: CGFloat = 100
         let buttonsHeight = size.height / 3 - buttonsSize / 1.5
-        leftButton = SKSpriteNode(imageNamed: "leftButton")
-        leftButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
-        leftButton.position = CGPoint(x: buttonsX, y: buttonsHeight)
-        leftButton.zPosition = 2
-        leftButton.name = "leftButton"
-        
-        rightButton = SKSpriteNode(imageNamed: "rightButton")
-        rightButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
-        rightButton.position = CGPoint(x: buttonsX + buttonsSize * 1.5, y: buttonsHeight)
-        rightButton.zPosition = 2
-        rightButton.name = "rightButton"
+//        leftButton = SKSpriteNode(imageNamed: "leftButton")
+//        leftButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
+//        leftButton.position = CGPoint(x: buttonsX, y: buttonsHeight)
+//        leftButton.zPosition = 2
+//        leftButton.name = "leftButton"
+//        
+//        rightButton = SKSpriteNode(imageNamed: "rightButton")
+//        rightButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
+//        rightButton.position = CGPoint(x: buttonsX + buttonsSize * 1.5, y: buttonsHeight)
+//        rightButton.zPosition = 2
+//        rightButton.name = "rightButton"
         
         actionButton = SKSpriteNode(imageNamed: "actionButton")
         actionButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
@@ -104,18 +102,6 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         leftWall.physicsBody?.collisionBitMask = PhysicsCategory.player
         leftWall.physicsBody?.contactTestBitMask = PhysicsCategory.player
         
-        //new
-        scoreNode = SKLabelNode(text: "\(player.points)")
-        scoreNode.position = CGPoint(x: 50, y: size.height - 50)
-        scoreNode.fontColor = .white
-        scoreNode.fontName = appFont
-        scoreNode.zPosition = 1
-        
-        comboLabel = SKLabelNode(text: "")
-        comboLabel.position = CGPoint(x: size.width/2, y: size.height - 50)
-        comboLabel.fontColor = .white
-        comboLabel.fontName = appFont
-        comboLabel.zPosition = 1
         
         super.init(size: size)
         
@@ -123,14 +109,12 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         physicsWorld.contactDelegate = self
         
         backgroundColor = .black
-        addChild(scoreNode)
         addChild(player.node)
-        addChild(leftButton)
-        addChild(rightButton)
+//        addChild(leftButton)
+//        addChild(rightButton)
         addChild(actionButton)
         addChild(pauseNode)
         addChild(background)
-        addChild(comboLabel)
         setupPlatforms()
                 
                 func setupPlatforms() {
@@ -334,7 +318,7 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func loseHp(dmg: Int) {
-        vibrate(with: .heavy)
+//        vibrate(with: .heavy)
         for _ in 0..<dmg {
             if(heartSprites.count >= 1) {
                 heartSprites[heartSprites.count - 1].removeFromParent()
@@ -386,27 +370,18 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     
     
     func calculatePlayerMovement() {
-        if(activeTouches.values.contains(leftButton)) {
-            player.movePlayer(direction: -1, maxWidth: size.width)
+        // Movimentação por botões de tela
+//        if activeTouches.values.contains(leftButton) {
+//            player.movePlayer(direction: -1, maxWidth: size.width)
+//        }
+//        if activeTouches.values.contains(rightButton) {
+//            player.movePlayer(direction: 1, maxWidth: size.width)
+//        }
+        
+        // Movimentação por gestos
+        if gestureDirection != 0 {
+            player.movePlayer(direction: gestureDirection, maxWidth: size.width)
         }
-        if(activeTouches.values.contains(rightButton)) {
-            player.movePlayer(direction: 1, maxWidth: size.width)
-            
-        }
-    }
-    
-    
-    func increaseScore() {
-        player.increaseScore(points: dificulty)
-        scoreNode.text = "\(player.points)"
-    }
-    func increaseCombo() {
-        if(player.combo == 0) {
-            comboLabel.text = ""
-        } else {
-            comboLabel.text = "\(player.combo)"
-        }
-        comboLabel.fontColor = .white
     }
     
     
@@ -415,6 +390,18 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         let scene = MenuScene(size: self.size)
         scene.scaleMode = self.scaleMode
         self.view?.presentScene(scene)
+    }
+    
+    
+    func handleGesture(gesture: HandPoses) {
+        switch gesture {
+        case .open:
+            gestureDirection = 1
+        case .closed:
+            gestureDirection = -1
+        case .background:
+            gestureDirection = 0
+        }
     }
     
 }

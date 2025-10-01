@@ -1,15 +1,18 @@
 //
 //  GameViewController.swift
-//  Chroma Knight
-//
-//  Created by Thiago Parisotto on 28/05/24.
-//
+
 
 import UIKit
 import SpriteKit
 import GameplayKit
+import HandGesturesClassifier
 
 class GameViewController: UIViewController {
+    
+    //instanciando a ARViewController
+    let arVC = ARViewController(cameraFrame: CGRect(x: 0, y: 0, width: 150, height: 200), isCameraHidden: false)
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,6 +22,20 @@ class GameViewController: UIViewController {
         let skView = self.view as! SKView
         
         skView.presentScene(menuScene)
+        
+        // Adiciona ARViewController como child
+        addChild(arVC)
+        view.addSubview(arVC.view)
+        arVC.didMove(toParent: self)
+        
+        // Configura callback de gestos
+        arVC.onGestureUpdate = { [weak self] gesture in
+            guard let self = self else { return }
+            if let scene = skView.scene as? LevelOneScene {
+                scene.handleGesture(gesture: gesture)
+            }
+        }
+
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {

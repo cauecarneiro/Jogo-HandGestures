@@ -1,0 +1,24 @@
+{
+  "originHash" : "97df119b368125b3fb42cd1a762a786091b36d849a57e45442e308b698209657",
+  "pins" : [
+    {
+      "identity" : "emotion-classification",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jfelipeschwaab/emotion-classification.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "c30bbcd7a63898a55da24165085aee2e96885fad"
+      }
+    },
+    {
+      "identity" : "handgesturesclassifier",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/brenomarq/HandGesturesClassifier",
+      "state" : {
+        "revision" : "fec11c5ddd237519b069330d85d1dfef8f9ada1d",
+        "version" : "1.0.9"
+      }
+    }
+  ],
+  "version" : 3
+}
