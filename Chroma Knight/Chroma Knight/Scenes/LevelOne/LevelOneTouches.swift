@@ -27,8 +27,8 @@ extension LevelOneScene {
 //                    leftButtonPressed(touch: touch)
 //                case "rightButton":
 //                    rightButtonPressed(touch: touch)
-                case "actionButton":
-                    actionButtonPressed()
+//                case "actionButton":
+//                    actionButtonPressed()
                 case "pauseButton":
                     pauseNode.pauseButtonPressed()
                     togglePause()
@@ -95,7 +95,7 @@ extension LevelOneScene {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
-            verifyJumpButton(touch: touch)
+//            verifyJumpButton(touch: touch)
             if let button = activeTouches[touch] {
                 deactivateButton(button: button)
                 activeTouches[touch] = nil
@@ -107,7 +107,7 @@ extension LevelOneScene {
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
-            verifyJumpButton(touch: touch)
+//            verifyJumpButton(touch: touch)
             if let button = activeTouches[touch] {
                 deactivateButton(button: button)
                 activeTouches[touch] = nil
@@ -117,10 +117,10 @@ extension LevelOneScene {
     }
     
     
-    func verifyJumpButton(touch: UITouch) {
-        let location = touch.location(in: self)
-        let touchedNode = atPoint(location)
-    }
+//    func verifyJumpButton(touch: UITouch) {
+//        let location = touch.location(in: self)
+//        let touchedNode = atPoint(location)
+//    }
     
 //    func leftButtonPressed(touch: UITouch) {
 ////        vibrate(with: .light)
@@ -136,13 +136,13 @@ extension LevelOneScene {
 //        player.animateWalk()
 //    }
     
-    func actionButtonPressed() {
-        animateButton(button: actionButton)
-        self.run(waitForAnimation) {
-            deactivateButton(button: self.actionButton)
-        }
-        player.playerJump()
-
-    }
+//    func actionButtonPressed() {
+//        animateButton(button: actionButton)
+//        self.run(waitForAnimation) {
+//            deactivateButton(button: self.actionButton)
+//        }
+//        player.playerJump()
+//
+//    }
 }
 

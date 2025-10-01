@@ -37,8 +37,7 @@ extension LevelOneScene {
     
     func collideWithFloor() {
         if player.isJumping {
-            actionButton.name = "actionButton"
-            actionButton.texture = SKTexture(imageNamed: "actionButton")
+//
             player.collideWithFloor()
 //            if(activeTouches.values.contains(leftButton) || activeTouches.values.contains(rightButton)) {
 //                player.animateWalk()

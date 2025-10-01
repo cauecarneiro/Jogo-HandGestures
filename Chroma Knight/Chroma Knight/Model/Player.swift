@@ -10,7 +10,6 @@ import SpriteKit
 import SwiftUI
 import HandGesturesClassifier
 
-
 class Player {
     var node: SKSpriteNode
     var movementSpeed: CGFloat
@@ -18,7 +17,6 @@ class Player {
     //jump
     var isJumping: Bool = false
     var jumpForce: CGFloat = 56.0
-
     
 
     //textures

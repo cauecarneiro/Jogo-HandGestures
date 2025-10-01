@@ -391,6 +391,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Braga Adventures";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.adventure-games";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Preciso usar a camera para detectar a posição da mao para andar com o player";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Meu app Precisa ideintificar voz";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -430,6 +431,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Braga Adventures";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.adventure-games";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Preciso usar a camera para detectar a posição da mao para andar com o player";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Meu app Precisa ideintificar voz";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

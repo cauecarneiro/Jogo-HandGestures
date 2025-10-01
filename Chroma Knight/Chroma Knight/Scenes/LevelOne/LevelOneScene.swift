@@ -2,6 +2,8 @@ import Foundation
 import SpriteKit
 import UIKit
 import HandGesturesClassifier
+import EmotionClassification
+
 
 class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     
@@ -9,14 +11,10 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     var controllerBackground: SKSpriteNode
     var background: SKSpriteNode
     
-    
-    // Controller
-//    var leftButton: SKSpriteNode
-//    var rightButton: SKSpriteNode
-    var actionButton: SKSpriteNode
+    private var audioAnalyzer: AudioAnalyzer!
+    private var audioViewModel: AudioViewModel!
     
     var activeTouches: [UITouch: SKSpriteNode] = [:] // Dictionary to track touches and their corresponding buttons
-    var pressingJumpAttack: Bool = false
     //Player
     var player: Player
     
@@ -34,11 +32,27 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
 
     var gestureDirection: CGFloat = 0 // -1 = para trás, 0 = parado, 1 = para frente
     
+    private let voiceLevelLabel: SKLabelNode
+    private var voiceTimer: Timer!
+    
+    
     override init(size: CGSize) {
         controllerBackground = SKSpriteNode(imageNamed: "controllerBackground")
         controllerBackground.scale(to: CGSize(width: size.width, height: size.height / 3))
         controllerBackground.position = CGPoint(x: size.width / 2, y: size.height / 2 - size.height / 2.7)
         controllerBackground.zPosition = -1
+        audioViewModel = AudioViewModel()
+        audioViewModel.startAnalysis()
+        
+
+        voiceLevelLabel = SKLabelNode(text: "Nível da voz: 0.0")
+        voiceLevelLabel.fontName = "Avenir-Heavy"
+        voiceLevelLabel.fontSize = 22
+        voiceLevelLabel.fontColor = .white
+        voiceLevelLabel.horizontalAlignmentMode = .left
+        voiceLevelLabel.verticalAlignmentMode = .top
+        voiceLevelLabel.position = CGPoint(x: 16, y: size.height - 16)
+        voiceLevelLabel.zPosition = 10
         
         var realSize = size
                 if(realSize.width/realSize.height <= 1) {
@@ -69,11 +83,11 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
 //        rightButton.zPosition = 2
 //        rightButton.name = "rightButton"
         
-        actionButton = SKSpriteNode(imageNamed: "actionButton")
-        actionButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
-        actionButton.position = CGPoint(x: size.width - buttonsX * 1.1, y: buttonsHeight)
-        actionButton.zPosition = 2
-        actionButton.name = "actionButton"
+//        actionButton = SKSpriteNode(imageNamed: "actionButton")
+//        actionButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
+//        actionButton.position = CGPoint(x: size.width - buttonsX * 1.1, y: buttonsHeight)
+//        actionButton.zPosition = 2
+//        actionButton.name = "actionButton"
         
         
         player = Player(size: size)
@@ -105,16 +119,28 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         
         super.init(size: size)
         
+//        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+//            guard let self = self else { return }
+//            
+//            Task { @MainActor in
+//                let level = self.audioViewModel.rmsLevel
+//                self.voiceLevelLabel.text = String(format: "Nível da voz: %.2f", level)
+//            }
+//        }
+        
         physicsWorld.gravity = CGVector(dx: 0, dy: -9.8)
         physicsWorld.contactDelegate = self
         
         backgroundColor = .black
+        
         addChild(player.node)
 //        addChild(leftButton)
 //        addChild(rightButton)
-        addChild(actionButton)
+//        addChild(actionButton)
         addChild(pauseNode)
         addChild(background)
+        addChild(voiceLevelLabel)
+        
         setupPlatforms()
                 
                 func setupPlatforms() {
@@ -294,6 +320,20 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     
     
     override func didMove(to view: SKView) {
+        super.didMove(to: view)
+            
+        voiceTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                let level = self.audioViewModel.rmsLevel
+                self.voiceLevelLabel.text = String(format: "Nível da voz: %.2f", level)
+                
+                if level == 1.0 {
+                    self.player.playerJump()
+                }
+            }
+        }
+        
         self.isUserInteractionEnabled = true
         NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -301,6 +341,8 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     
     override func willMove(from view: SKView) {
         super.willMove(from: view)
+        voiceTimer?.invalidate()
+        voiceTimer = nil
         // Remove observers when the scene is no longer in the view hierarchy
         NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -391,7 +433,7 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         scene.scaleMode = self.scaleMode
         self.view?.presentScene(scene)
     }
-    
+        
     
     func handleGesture(gesture: HandPoses) {
         switch gesture {
