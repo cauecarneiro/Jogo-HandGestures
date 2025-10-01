@@ -61,22 +61,40 @@ class Player {
     
     
     func animatePlayer() {
-        if(!isJumping) {
-            if(!damageCD) {
-                node.size = CGSize(width: 809/15, height: 1024/15)
-                node.removeAction(forKey: "animation")
-                node.run(SKAction.repeatForever(SKAction.animate(with: textures, timePerFrame: 1/TimeInterval(textures.count), resize: false, restore: false)), withKey: "animation")
-            }
-        }
+        guard !isJumping, !damageCD else { return }
+        // If already idling, do nothing to avoid restarting the animation every frame
+        if node.action(forKey: "idle") != nil { return }
+        // Stop walking animation if it's running
+        node.removeAction(forKey: "walk")
+
+        node.size = CGSize(width: 809/15, height: 1024/15)
+        let action = SKAction.repeatForever(
+            SKAction.animate(
+                with: textures,
+                timePerFrame: 1/TimeInterval(textures.count),
+                resize: false,
+                restore: false
+            )
+        )
+        node.run(action, withKey: "idle")
     }
     func animateWalk() {
-        if(!isJumping) {
-            if(!damageCD) {
-                node.size = CGSize(width: 809/15, height: 1024/15)
-                node.removeAction(forKey: "animation")
-                node.run(SKAction.repeatForever(SKAction.animate(with: walkingTextures, timePerFrame: 1/TimeInterval(walkingTextures.count), resize: false, restore: false)), withKey: "animation")
-            }
-        }
+        guard !isJumping, !damageCD else { return }
+        // If already walking, do nothing to avoid restarting the animation every frame
+        if node.action(forKey: "walk") != nil { return }
+        // Stop idle animation if it's running
+        node.removeAction(forKey: "idle")
+
+        node.size = CGSize(width: 809/15, height: 1024/15)
+        let action = SKAction.repeatForever(
+            SKAction.animate(
+                with: walkingTextures,
+                timePerFrame: 1/TimeInterval(walkingTextures.count),
+                resize: false,
+                restore: false
+            )
+        )
+        node.run(action, withKey: "walk")
     }
     func movePlayer(direction: CGFloat, maxWidth: CGFloat) {
         if direction == 0 {
@@ -94,6 +112,10 @@ class Player {
     func playerJump() {
         if(!isJumping) {
             if(!damageCD) {
+                // Stop any ongoing idle/walk animations
+                node.removeAction(forKey: "idle")
+                node.removeAction(forKey: "walk")
+
                 node.size = CGSize(width: 809/10, height: 1024/10)
                 node.texture = SKTexture(imageNamed: "playerJumping")
             }
@@ -103,7 +125,8 @@ class Player {
     }
     
     func impulsePlayer(vector: CGVector) {
-        node.removeAction(forKey: "animation")
+        node.removeAction(forKey: "idle")
+        node.removeAction(forKey: "walk")
         node.physicsBody?.velocity = CGVector.zero
         node.physicsBody?.applyImpulse(vector)
     }
@@ -126,7 +149,8 @@ class Player {
                 }
             }
             
-            node.removeAction(forKey: "animation")
+            node.removeAction(forKey: "idle")
+            node.removeAction(forKey: "walk")
             node.size = CGSize(width: 809/15, height: 1024/15)
             node.texture = SKTexture(imageNamed: "playerDmg")
             node.physicsBody?.velocity = CGVector.zero
@@ -150,3 +174,4 @@ class Player {
     }
 
 }
+
