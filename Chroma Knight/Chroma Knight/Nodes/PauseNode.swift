@@ -71,6 +71,21 @@ class PauseNode: SKNode {
         }
     }
    
+    func resumeButtonPressed() {
+        // Show pressed state for resume button and then unpause UI overlay
+        self.resumeButton.texture = SKTexture(imageNamed: "resumeButtonPressed")
+        resumeButton.run(waitForAnimation) {
+            UserConfig.shared.changePause()
+            self.resumeButton.texture = SKTexture(imageNamed: "resumeButton")
+            // Remove pause overlay elements
+            self.blackBackground.removeFromParent()
+            self.resumeButton.removeFromParent()
+            self.homeButton.removeFromParent()
+            // Reset pause button appearance
+            self.pauseButton.texture = SKTexture(imageNamed: "PauseButtom")
+        }
+    }
+    
     func homeButtonPressed(scene: SKScene) {
         animateButton(button: homeButton)
         let sequence = SKAction.sequence([waitForAnimation, fadeOut])
@@ -83,3 +98,4 @@ class PauseNode: SKNode {
     }
     
 }
+

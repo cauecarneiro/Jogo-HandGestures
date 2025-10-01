@@ -16,7 +16,11 @@ extension LevelOneScene {
             collideWithFloor()
         }
         
-                
+        //Fogo
+        if (contactA == PhysicsCategory.player && contactB == PhysicsCategory.fire) || (contactA == PhysicsCategory.fire && contactB == PhysicsCategory.player) {
+            player.takeDamage(direction: 0, damage: 3)
+        }
+        
         if(contactA == PhysicsCategory.fruits && contactB == PhysicsCategory.player || contactB == PhysicsCategory.fruits && contactA == PhysicsCategory.player) {
             
             if(contactA == PhysicsCategory.fruits) {
@@ -49,43 +53,46 @@ extension LevelOneScene {
     }
     
     
+    //    func collideWithFloor() {
+    //        increaseCombo()
+    //        if player.isJumping {
+    //            //            actionButton.name = "actionButton"
+    //            //            actionButton.texture = SKTexture(imageNamed: "actionButton")
+    //            player.collideWithFloor()
+    //            if(activeTouches.values.contains(leftButton) || activeTouches.values.contains(rightButton)) {
+    //                player.animateWalk()
+    //            } else {
+    //                player.animatePlayer()
+    //            }
+    //        }
+    //    }
+    
     func collideWithFloor() {
         increaseCombo()
         if player.isJumping {
-            actionButton.name = "actionButton"
-            actionButton.texture = SKTexture(imageNamed: "actionButton")
             player.collideWithFloor()
-            if(activeTouches.values.contains(leftButton) || activeTouches.values.contains(rightButton)) {
+            
+            // Decide animação só pela velocidade (física)
+            if let dx = player.node.physicsBody?.velocity.dx, abs(dx) > 0.1 {
                 player.animateWalk()
             } else {
                 player.animatePlayer()
             }
         }
     }
+}
     
-    func checkMerchantCollision() {
-        guard let merchant = self.merchant else { 
-            return
-        }
-        
-        if(player.node.intersects(merchant.node)) {
-            openShop()
-        }
+    struct PhysicsCategory {
+        static let none: UInt32 = 0
+        static let player: UInt32 = 1 << 0
+        static let ground: UInt32 = 1 << 1
+        static let slime: UInt32 = 1 << 2
+        // static let ghost: UInt32 = 1 << 3
+        static let rightWall: UInt32 = 1 << 4
+        static let leftWall: UInt32 = 1 << 5
+        static let fruits: UInt32 = 1 << 6
+        static let coins: UInt32 = 1 << 7
+        static let slimeKing: UInt32 = 1 << 8
+        static let fire: UInt32 = 1 << 9  // 16
     }
-
-    
-}
-
-struct PhysicsCategory {
-    static let none: UInt32 = 0
-    static let player: UInt32 = 1 << 0
-    static let ground: UInt32 = 1 << 1
-    static let slime: UInt32 = 1 << 2
-   // static let ghost: UInt32 = 1 << 3
-    static let rightWall: UInt32 = 1 << 4
-    static let leftWall: UInt32 = 1 << 5
-    static let fruits: UInt32 = 1 << 6
-    static let coins: UInt32 = 1 << 7
-    static let slimeKing: UInt32 = 1 << 8
-}
 

@@ -8,16 +8,15 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     var controllerBackground: SKSpriteNode
     var background: SKSpriteNode
     // Controller
-//    var leftButton: SKSpriteNode
-//    var rightButton: SKSpriteNode
-//    var actionButton: SKSpriteNode
-    
+    //    var leftButton: SKSpriteNode
+    //    var rightButton: SKSpriteNode
+    //    var actionButton: SKSpriteNode
+    //
     var activeTouches: [UITouch: SKSpriteNode] = [:] // Dictionary to track touches and their corresponding buttons
     var pressingJumpAttack: Bool = false
     //Player
     var player: Player
     
-    var merchant: Merchant?
     //ground
     var ground: SKSpriteNode
     
@@ -31,12 +30,13 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     var pauseStatus: Bool = false
     var heartSprites: [SKSpriteNode] =  []
     
-//    var dificulty = 1
-//    var shopOpen = false
-//    
-//    var comboLabel: SKLabelNode
+    var dificulty = 1
+    //    var shopOpen = false
+    //
+    var comboLabel: SKLabelNode
     
     var arController = ARViewController(cameraFrame: CGRect(x:100, y: 100, width: 100, height: 100), showPreview: true)
+    var currentMovement: MovementState = .none
     
     
     override init(size: CGSize) {
@@ -45,37 +45,43 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         controllerBackground.position = CGPoint(x: size.width / 2, y: size.height / 2 - size.height / 2.7)
         controllerBackground.zPosition = -1
         
+        var realSize = size
+        if(realSize.width/realSize.height <= 1) {
+            realSize = CGSize(width: 852, height: 393)
+        }
         background = SKSpriteNode(imageNamed: "levelOneBackground")
-        background.scale(to: CGSize(width: size.width, height: size.height / 1.2))
-        background.position = CGPoint(x: size.width / 2, y: size.height / 2 + size.height / 5)
+        background.scale(to: realSize)
+        background.position = CGPoint(x: realSize.width/2, y: realSize.height/2)
+        background.alpha = 0.6
+        background.zPosition = -2
         background.zPosition = -2
         
         pauseNode = PauseNode(size: size)
         pauseNode.zPosition = 5
         
-//        let buttonsX = 100.0
-//        let buttonsSize: CGFloat = 100
-//        let buttonsHeight = size.height / 3 - buttonsSize / 1.5
-//        leftButton = SKSpriteNode(imageNamed: "leftButton")
-//        leftButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
-//        leftButton.position = CGPoint(x: buttonsX, y: buttonsHeight)
-//        leftButton.zPosition = 2
-//        leftButton.name = "leftButton"
-//        
-//        rightButton = SKSpriteNode(imageNamed: "rightButton")
-//        rightButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
-//        rightButton.position = CGPoint(x: buttonsX + buttonsSize * 1.5, y: buttonsHeight)
-//        rightButton.zPosition = 2
-//        rightButton.name = "rightButton"
+        //        let buttonsX = 100.0
+        //        let buttonsSize: CGFloat = 100
+        //        let buttonsHeight = size.height / 3 - buttonsSize / 1.5
+        //        leftButton = SKSpriteNode(imageNamed: "leftButton")
+        //        leftButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
+        //        leftButton.position = CGPoint(x: buttonsX, y: buttonsHeight)
+        //        leftButton.zPosition = 2
+        //        leftButton.name = "leftButton"
+        //
+        //        rightButton = SKSpriteNode(imageNamed: "rightButton")
+        //        rightButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
+        //        rightButton.position = CGPoint(x: buttonsX + buttonsSize * 1.5, y: buttonsHeight)
+        //        rightButton.zPosition = 2
+        //        rightButton.name = "rightButton"
         
-//        actionButton = SKSpriteNode(imageNamed: "actionButton")
-//        actionButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
-//        actionButton.position = CGPoint(x: size.width - buttonsX * 1.1, y: buttonsHeight)
-//        actionButton.zPosition = 2
-//        actionButton.name = "actionButton"
+        //        actionButton = SKSpriteNode(imageNamed: "actionButton")
+        //        actionButton.scale(to: CGSize(width: buttonsSize, height: buttonsSize))
+        //        actionButton.position = CGPoint(x: size.width - buttonsX * 1.1, y: buttonsHeight)
+        //        actionButton.zPosition = 2
+        //        actionButton.name = "actionButton"
         
         
-        player = Player(size: size, sword: Sword(damage: 1, size: size, type: .basic))
+        player = Player(size: size)
         ground = SKSpriteNode(color: .clear, size: CGSize(width: size.width * 2, height: 10))
         ground.position = CGPoint(x: size.width/2, y: player.node.position.y - player.node.size.height/1.8)
         ground.physicsBody = SKPhysicsBody(rectangleOf: ground.size)
@@ -108,11 +114,11 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         scoreNode.fontName = appFont
         scoreNode.zPosition = 1
         
-//        comboLabel = SKLabelNode(text: "")
-//        comboLabel.position = CGPoint(x: size.width/2, y: size.height - 50)
-//        comboLabel.fontColor = .white
-//        comboLabel.fontName = appFont
-//        comboLabel.zPosition = 1
+        comboLabel = SKLabelNode(text: "")
+        comboLabel.position = CGPoint(x: size.width/2, y: size.height - 50)
+        comboLabel.fontColor = .white
+        comboLabel.fontName = appFont
+        comboLabel.zPosition = 1
         
         super.init(size: size)
         
@@ -120,21 +126,185 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         physicsWorld.contactDelegate = self
         
         backgroundColor = .black
-        addChild(ground)
-        addChild(leftWall)
-        addChild(rightWall)
         addChild(scoreNode)
         addChild(player.node)
-//        addChild(leftButton)
-//        addChild(rightButton)
-//        addChild(actionButton)
+        //        addChild(leftButton)
+        //        addChild(rightButton)
+        //        addChild(actionButton)
         addChild(pauseNode)
-        addChild(controllerBackground)
         addChild(background)
-//        addChild(comboLabel)
+        addChild(comboLabel)
+        setupPlatforms()
         
+        func setupPlatforms() {
+            // Array para guardar todas as plataformas
+            var platforms: [SKSpriteNode] = []
+            let platformSizeWidth: CGFloat = 255 * 0.50
+            let plarformSizeHeight: CGFloat = 53 * 0.50
+            
+            let paredeWidth: CGFloat = 60 * 0.50
+            let paredeHeight: CGFloat = 500 * 0.50
+            
+            
+            // --- Plataformas Horizontais ---
+            
+            //
+            let platform1 = SKSpriteNode(imageNamed: "plataforma")
+            platform1.size = CGSize(width: platformSizeWidth, height: plarformSizeHeight)
+            platform1.position = CGPoint(x: 0, y: 280)
+            platforms.append(platform1)
+            
+            let platform2 = SKSpriteNode(imageNamed: "plataforma")
+            platform2.size = CGSize(width: platformSizeWidth, height: plarformSizeHeight)
+            platform2.position = CGPoint(x: platform1.position.x + platformSizeWidth, y: 280)
+            platforms.append(platform2)
+            
+            //
+            let platform3 = SKSpriteNode(imageNamed: "plataforma")
+            platform3.size = CGSize(width: platformSizeWidth, height: plarformSizeHeight)
+            platform3.position = CGPoint(x: 150, y: platform1.position.y - 100)
+            platforms.append(platform3)
+            
+            let platform4 = SKSpriteNode(imageNamed: "plataforma")
+            platform4.size = CGSize(width: platformSizeWidth, height: plarformSizeHeight)
+            platform4.position = CGPoint(x: platform3.position.x + platformSizeWidth, y: platform1.position.y - 100)
+            platforms.append(platform4)
+            
+            //
+            
+            let platform5 = SKSpriteNode(imageNamed: "plataforma")
+            platform5.size = CGSize(width: platformSizeWidth, height: plarformSizeHeight)
+            platform5.position = CGPoint(x: 10, y: platform3.position.y - 100)
+            platforms.append(platform5)
+            
+            let platform6 = SKSpriteNode(imageNamed: "plataforma")
+            platform6.size = CGSize(width: platformSizeWidth, height: plarformSizeHeight)
+            platform6.position = CGPoint(x: platform5.position.x + platformSizeWidth, y: platform3.position.y - 100)
+            platforms.append(platform6)
+            
+            let platform7 = SKSpriteNode(imageNamed: "plataforma")
+            platform7.size = CGSize(width: platformSizeWidth, height: plarformSizeHeight)
+            platform7.position = CGPoint(x: platform5.position.x + 2 * platformSizeWidth, y: platform3.position.y - 100)
+            platforms.append(platform7)
+            
+            let platform8 = SKSpriteNode(imageNamed: "plataforma")
+            platform8.size = CGSize(width: platformSizeWidth, height: plarformSizeHeight)
+            platform8.position = CGPoint(x: platform6.position.x + 2 * platformSizeWidth, y: platform3.position.y - 100)
+            platforms.append(platform8)
+            
+            //
+            
+            let parede1 = SKSpriteNode(imageNamed: "paredeG")
+            parede1.size = CGSize(width: paredeWidth, height: paredeHeight)
+            parede1.position = CGPoint(x: platform4.position.x + paredeWidth + 40, y: 290)
+            platforms.append(parede1)
+            
+            let parede2 = SKSpriteNode(imageNamed: "paredeG")
+            parede2.size = CGSize(width: paredeWidth, height: paredeHeight)
+            parede2.position = CGPoint(x: platform8.position.x + paredeWidth + 40, y: platform3.position.y + 10)
+            platforms.append(parede2)
+            
+            let parede3 = SKSpriteNode(imageNamed: "paredeG")
+            parede3.size = CGSize(width: paredeWidth, height: paredeHeight)
+            parede3.position = CGPoint(x: parede2.position.x + platformSizeWidth, y: 290)
+            platforms.append(parede3)
+            
+            //
+            
+            let platform9 = SKSpriteNode(imageNamed: "plataforma")
+            platform9.size = CGSize(width: 30, height: plarformSizeHeight)
+            platform9.position = CGPoint(x: parede1.position.x + 30, y: platform3.position.y)
+            platforms.append(platform9)
+            
+            
+            let platform10 = SKSpriteNode(imageNamed: "plataforma")
+            platform10.size = CGSize(width: 30, height: plarformSizeHeight)
+            platform10.position = CGPoint(x: parede2.position.x - 30, y: platform3.position.y + 120)
+            platforms.append(platform10)
+            
+            //
+            
+            let platform11 = SKSpriteNode(imageNamed: "plataforma")
+            platform11.size = CGSize(width: platformSizeWidth - 30, height: plarformSizeHeight)
+            platform11.position = CGPoint(x: platform8.position.x + 2 * platformSizeWidth - 30, y: platform3.position.y - 100)
+            platforms.append(platform11)
+            
+            //fogo
+            
+            for i in 0..<25 { // Loop de 0 a 3 para 4 fogos
+                // Calcula a posição X para o fogo atual
+                // A cada iteração (i=0, i=1, i=2, i=3), adiciona o espaçamento
+                let fireX = platform1.position.x + (CGFloat(i) * 60)
+                
+                let fire = setupAnimatedFire(at: CGPoint(x: fireX, y: 20), size: CGSize(width: 64, height: 64), zPosition: 2)
+                addChild(fire)
+            }
+            
+            
+            //Menu no jogo
+            let menuMini = SKSpriteNode(imageNamed: "menuMini")
+            menuMini.size = CGSize(width: 270 * 0.80, height: 520 * 0.80)
+            menuMini.position = CGPoint(x: size.width - 100, y: size.height/2)
+            menuMini.zPosition = 1
+            menuMini.physicsBody = SKPhysicsBody(rectangleOf: menuMini.size)
+            menuMini.physicsBody?.isDynamic = false
+            menuMini.physicsBody?.categoryBitMask = PhysicsCategory.ground
+            menuMini.physicsBody?.collisionBitMask = PhysicsCategory.player
+            menuMini.physicsBody?.contactTestBitMask = PhysicsCategory.player
+            addChild(menuMini)
+            
+            
+            
+            // --- Adiciona a física para todas as plataformas de uma vez ---
+            for platform in platforms {
+                platform.zPosition = 1
+                platform.physicsBody = SKPhysicsBody(rectangleOf: platform.size)
+                platform.physicsBody?.isDynamic = false
+                platform.physicsBody?.categoryBitMask = PhysicsCategory.ground
+                platform.physicsBody?.collisionBitMask = PhysicsCategory.player
+                platform.physicsBody?.contactTestBitMask = PhysicsCategory.player
+                addChild(platform)
+            }
+        }
+        
+        //Fogo
+        func setupAnimatedFire(at position: CGPoint, size: CGSize, zPosition: CGFloat) -> SKSpriteNode {
+            var fireFrames: [SKTexture] = []
+            let numberOfFireFrames = 6 // Supondo que você tenha fire0.png a fire3.png
+            
+            for i in 1..<numberOfFireFrames {
+                let textureName = "fire\(i)" // Substitua se seus assets tiverem outro nome
+                let fireTexture = SKTexture(imageNamed: textureName)
+                fireFrames.append(fireTexture)
+            }
+            
+            let firstFrame = fireFrames[0]
+            let fire = SKSpriteNode(texture: firstFrame)
+            fire.position = position
+            fire.size = size // Use o tamanho passado como parâmetro
+            fire.zPosition = zPosition // Certifique-se que o fogo aparece na frente de coisas como chão
+            
+            // Cria a ação de animação e repetição
+            let animationAction = SKAction.animate(with: fireFrames, timePerFrame: 0.15) // Ajuste timePerFrame para a velocidade da animação
+            let repeatAction = SKAction.repeatForever(animationAction)
+            fire.run(repeatAction, withKey: "fireAnimation") // Dá uma chave para a ação, se precisar parar/pausar
+            
+            // --- Configuração do PhysicsBody do Fogo ---
+            fire.physicsBody = SKPhysicsBody(rectangleOf: fire.size) // Um retângulo que cobre o sprite de fogo
+            fire.physicsBody?.isDynamic = false // O fogo não se move com a física
+            fire.physicsBody?.affectedByGravity = false // O fogo não é afetado pela gravidade
+            fire.physicsBody?.categoryBitMask = PhysicsCategory.fire // Define a categoria como fogo
+            fire.physicsBody?.collisionBitMask = PhysicsCategory.none // O fogo não colide "fisicamente" com nada (não para outros objetos)
+            fire.physicsBody?.contactTestBitMask = PhysicsCategory.player // ESSENCIAL: Avisa quando o player entra em contato
+            
+            // Adiciona um nome ao nó para facilitar a identificação na colisão (opcional, mas bom)
+            fire.name = "fireColisao"
+            
+            
+            return fire
+        }
         //new
-        initiateHp()
+        //        initiateHp()   // Removed this line per instructions
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -161,6 +331,8 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         // Remove observers when the scene is no longer in the view hierarchy
         NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
+        
+        arController.view?.removeFromSuperview()
     }
     
     @objc func appDidEnterBackground() {
@@ -172,19 +344,12 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
         calculatePlayerMovement()
-        checkMerchantCollision()
+        
+        let handState = arController.currentHandState
+        updateHandState(handState)
+        
     }
     
-    func initiateHp() {
-        for i in 0..<Int(player.hp) {
-            let hpHeart = SKSpriteNode(imageNamed: "heart")
-            hpHeart.size = CGSize(width: 30, height: 30)
-            hpHeart.position = CGPoint(x: 50 * (i + 1) + 5*i, y: Int(size.height) - 80)
-            hpHeart.zPosition = 3
-            addChild(hpHeart)
-            heartSprites.append(hpHeart)
-        }
-    }
     
     func loseHp(dmg: Int) {
         vibrate(with: .heavy)
@@ -202,13 +367,6 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
                 healingAmount = player.maxHP - player.hp
             }
             player.incHp(hp: healingAmount)
-            for i in heartSprites.count..<player.hp {
-                let hpHeart = SKSpriteNode(imageNamed: "heart")
-                hpHeart.size = CGSize(width: 30, height: 30)
-                hpHeart.position = CGPoint(x: 50 * (i + 1) + 5*i, y: Int(size.height) - 80)
-                addChild(hpHeart)
-                heartSprites.append(hpHeart)
-            }
             return true
         }
         return false
@@ -246,72 +404,42 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     
     
     func calculatePlayerMovement() {
-//        if(activeTouches.values.contains(leftButton)) {
-//            player.movePlayer(direction: -1, maxWidth: size.width)
-//        }
-//        if(activeTouches.values.contains(rightButton)) {
-//            
-//            player.movePlayer(direction: 1, maxWidth: size.width)
-//            
-//        }
-        
-        if(arController.currentHandState == .closed) {
-            player.movePlayer(direction: -1, maxWidth: size.width)
-        }
-        
-        if(arController.currentHandState == .open) {
+        switch arController.currentHandState {
+        case .open:
             player.movePlayer(direction: 1, maxWidth: size.width)
-        }
-    }
-    
-    
-    func increaseScore() {
-        player.increaseScore(points: dificulty)
-        scoreNode.text = "\(player.points)"
-    }
-    func increaseCombo() {
-        if(player.combo == 0) {
-            comboLabel.text = ""
-        } else {
-            comboLabel.text = "\(player.combo)"
-        }
-        comboLabel.fontColor = .white
-    }
-    func openShop() {
-        shopOpen = true
-        let newSword = arc4random_uniform(3)
-        var type = SwordType.basic
-        switch newSword {
-        case 0:
-            type = .katana
-        case 1:
-            type = .void
-        case 2:
-            type = .dagger
+        case .closed:
+            player.movePlayer(direction: -1, maxWidth: size.width)
         default:
-            type = .void
-            
+            break
+        }
+    }
+        
+        
+        func increaseScore() {
+            player.increaseScore(points: dificulty)
+            scoreNode.text = "\(player.points)"
+        }
+        func increaseCombo() {
+            if(player.combo == 0) {
+                comboLabel.text = ""
+            } else {
+                comboLabel.text = "\(player.combo)"
+            }
+            comboLabel.fontColor = .white
         }
         
-        player.changeSword(sword: Sword(damage: 2, size: size, type: type), size: size)
-        closeShop()
-    }
-    
-    func closeShop() {
-        let action = SKAction.run {
-            self.merchant?.node.removeFromParent()
-            self.merchant = nil
+        
+        
+        func presentMenuScene() {
+            let scene = MenuScene(size: self.size)
+            scene.scaleMode = self.scaleMode
+            self.view?.presentScene(scene)
         }
-        self.shopOpen = false
-        merchant?.node.run(SKAction.sequence([SKAction.fadeOut(withDuration: 0.5), action]))
     }
-    
-    
-    func presentMenuScene() {
-        let scene = MenuScene(size: self.size)
-        scene.scaleMode = self.scaleMode
-        self.view?.presentScene(scene)
-    }
-    
-}
 
+
+enum MovementState {
+    case none
+    case forward
+    case backward
+}

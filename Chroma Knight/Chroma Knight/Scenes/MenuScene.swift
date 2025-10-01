@@ -15,7 +15,7 @@ class MenuScene: SKScene {
     
     var playLabel: SKLabelNode
     var playButton: SKSpriteNode
-    
+    var levelOne: LevelOneScene?
     
     override init(size: CGSize) {
     
@@ -23,6 +23,8 @@ class MenuScene: SKScene {
         if(realSize.width/realSize.height <= 1) {
             realSize = CGSize(width: 852, height: 393)
         }
+        
+        
         background = SKSpriteNode(imageNamed: "menuBackground")
         background.scale(to: realSize)
         background.position = CGPoint(x: realSize.width/2, y: realSize.height/2)
@@ -71,7 +73,7 @@ class MenuScene: SKScene {
     }
     
     override func didMove(to view: SKView) {
-        
+       
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

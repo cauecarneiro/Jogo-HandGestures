@@ -15,11 +15,9 @@ class Player {
     
     //jump
     var isJumping: Bool = false
-    var jumpForce: CGFloat = 100.0
+    var jumpForce: CGFloat = 30.0
     
-    //sword
-    var sword: Sword
-    var leftSword: Sword?
+
     //textures
     var textures: [SKTexture] = []
     var walkingTextures: [SKTexture] = []
@@ -36,11 +34,11 @@ class Player {
     var points: Int = 0
     var combo: Int = 0
     
-    init(size: CGSize, sword: Sword) {
+    init(size: CGSize) {
         self.movementSpeed = 2.0
         self.node = SKSpriteNode(imageNamed: "player0")
-        node.size = CGSize(width: 809/15, height: 1024/15)
-        node.position = CGPoint(x: size.width/2, y: (size.height / 2 - size.height / 3.4) + node.size.height)
+        node.size = CGSize(width: 809/30, height: 1024/30)
+        node.position = CGPoint(x: 0, y: 280 + node.size.height)
         node.zPosition = 1
         node.name = "player"
         
@@ -52,15 +50,12 @@ class Player {
         node.physicsBody?.collisionBitMask = PhysicsCategory.ground | PhysicsCategory.slime
         node.physicsBody?.contactTestBitMask = PhysicsCategory.ground | PhysicsCategory.slime
         
-        self.sword = sword
-        self.sword.node.zPosition = 2
-        self.node.addChild(self.sword.node)
         
         self.textures.append(SKTexture(imageNamed: "player0"))
         self.textures.append(SKTexture(imageNamed: "player1"))
-        self.walkingTextures.append(SKTexture(imageNamed: "playerWlk0"))
-        self.walkingTextures.append(SKTexture(imageNamed: "playerWlk1"))
-        self.walkingTextures.append(SKTexture(imageNamed: "playerWlk2"))
+        self.walkingTextures.append(SKTexture(imageNamed: "playerWLK0"))
+        self.walkingTextures.append(SKTexture(imageNamed: "playerWLK1"))
+        self.walkingTextures.append(SKTexture(imageNamed: "playerWLK2"))
         
         animatePlayer()
     }
@@ -74,22 +69,18 @@ class Player {
     func animatePlayer() {
         if(!isJumping) {
             if(!damageCD) {
-                node.size = CGSize(width: 809/15, height: 1024/15)
+                node.size = CGSize(width: 809/30, height: 1024/30)
                 node.removeAction(forKey: "animation")
                 node.run(SKAction.repeatForever(SKAction.animate(with: textures, timePerFrame: 1/TimeInterval(textures.count), resize: false, restore: false)), withKey: "animation")
             }
-            sword.animateSwordStd(duration: 1/TimeInterval(textures.count))
-            leftSword?.animateSwordStd(duration: 1/TimeInterval(textures.count))
         }
     }
     func animateWalk() {
         if(!isJumping) {
             if(!damageCD) {
-                node.size = CGSize(width: 927/15, height: 1024/15)
+                node.size = CGSize(width: 927/30, height: 1024/30)
                 node.removeAction(forKey: "animation")
                 node.run(SKAction.repeatForever(SKAction.animate(with: walkingTextures, timePerFrame: 1/TimeInterval(walkingTextures.count), resize: false, restore: false)), withKey: "animation")
-                sword.animateSwordWalking(duration: 1/TimeInterval(walkingTextures.count))
-                leftSword?.animateSwordWalking(duration: 1/TimeInterval(walkingTextures.count))
             }
         }
     }
@@ -102,7 +93,7 @@ class Player {
     func playerJump() {
         if(!isJumping) {
             if(!damageCD) {
-                node.size = CGSize(width: 809/15, height: 1024/15)
+                node.size = CGSize(width: 809/30, height: 1024/30)
                 node.texture = SKTexture(imageNamed: "playerJumping")
             }
             if isJumping && !isJumpAttacking { return }
@@ -113,42 +104,30 @@ class Player {
     
     func impulsePlayer(vector: CGVector) {
         node.removeAction(forKey: "animation")
-        if(!(sword.type == .katana)) {
-            sword.node.removeAllActions()
-            leftSword?.node.removeAllActions()
-        }
         node.physicsBody?.velocity = CGVector.zero
         node.physicsBody?.applyImpulse(vector)
     }
-    
-    func jumpAttack() {
-        if(!isJumpAttacking) {
-            sword.jumpAttack()
-            leftSword?.jumpAttackLeft()
-            if(!damageCD) {
-                self.node.removeAction(forKey: "animation")
-                node.size = CGSize(width: 809/15, height: 1024/15)
-                node.texture = SKTexture(imageNamed: "playerJumpAttack")
-            }
-            isJumpAttacking = true
-        }
-    }
+
     func collideWithFloor() {
-        sword.collideWithFloor()
-        leftSword?.collideWithFloor()
         isJumping = false
         isJumpAttacking = false
         combo = 0
-        sword.node.colorBlendFactor = 0
-        if let leftSword = leftSword {
-            leftSword.node.colorBlendFactor = 0
-        }
     }
     func takeDamage(direction: CGFloat, damage: Int) {
         if(!damageCD) {
             hp -= damage
+            
+            // Adiciona a verificação de Game Over
+            if let scene = node.scene as? LevelOneScene {
+                scene.loseHp(dmg: damage)
+                if scene.checkGameOver() {
+                    scene.gameOver()
+                    return // Encerra a função se o jogo acabou
+                }
+            }
+            
             node.removeAction(forKey: "animation")
-            node.size = CGSize(width: 809/15, height: 1024/15)
+            node.size = CGSize(width: 809/30, height: 1024/30)
             node.texture = SKTexture(imageNamed: "playerDmg")
             node.physicsBody?.velocity = CGVector.zero
             node.zPosition = 3
@@ -169,25 +148,5 @@ class Player {
             self.node.run(sequence, withKey: "damage")
         }
     }
-    
-    func getDamage() -> Int {
-        return sword.damage + combo
-    }
-    func changeSword(sword: Sword, size: CGSize) {
-        self.sword.node.removeFromParent()
-        self.leftSword?.node.removeFromParent()
-        self.sword = sword
-        self.node.addChild(sword.node)
-        if(sword.type == .dagger) {
-            leftSword = Sword(damage: sword.damage, size: size, type: .dagger)
-            leftSword?.node.xScale = -1
-            leftSword?.node.position.x -= 20
-            leftSword?.initialPos = leftSword?.node.position ?? CGPoint.zero
-            if let swordNode = leftSword?.node {
-                node.addChild(swordNode)
-            }
-        }
-    }
+
 }
-
-

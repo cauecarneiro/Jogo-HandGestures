@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "fundo.png",
+      "filename" : "playerDmg.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
