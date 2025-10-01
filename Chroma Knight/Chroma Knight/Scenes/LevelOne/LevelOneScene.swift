@@ -421,9 +421,8 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
 //        }
         
         // Movimentação por gestos
-        if gestureDirection != 0 {
-            player.movePlayer(direction: gestureDirection, maxWidth: size.width)
-        }
+        
+        player.movePlayer(direction: gestureDirection, maxWidth: size.width)
     }
     
     

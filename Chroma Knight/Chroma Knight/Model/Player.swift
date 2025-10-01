@@ -79,10 +79,17 @@ class Player {
         }
     }
     func movePlayer(direction: CGFloat, maxWidth: CGFloat) {
+        if direction == 0 {
+            animatePlayer()
+            return
+        }
+        
         if(node.position.x <= (maxWidth - node.size.width/2) && direction == 1 || node.position.x >= (node.size.width/2) && direction == -1) {
             node.position.x += movementSpeed * direction
             node.xScale = direction
         }
+        
+        animateWalk()
     }
     func playerJump() {
         if(!isJumping) {
@@ -103,6 +110,7 @@ class Player {
 
     func collideWithFloor() {
         isJumping = false
+        animatePlayer()
     }
     
     func takeDamage(direction: CGFloat, damage: Int) {
