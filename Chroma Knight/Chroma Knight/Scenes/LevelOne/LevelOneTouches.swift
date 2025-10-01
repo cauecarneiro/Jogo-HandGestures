@@ -151,6 +151,6 @@ extension LevelOneScene {
         player.playerJump()
         actionButton.name = "jumpAttackButton"
         actionButton.texture = SKTexture(imageNamed: "jumpAttackButton")
-    }git a
+    }
 }
 

@@ -15,7 +15,7 @@ class Player {
     
     //jump
     var isJumping: Bool = false
-    var jumpForce: CGFloat = 30.0
+    var jumpForce: CGFloat = 56.0
     
 
     //textures
@@ -37,7 +37,7 @@ class Player {
     init(size: CGSize) {
         self.movementSpeed = 2.0
         self.node = SKSpriteNode(imageNamed: "player0")
-        node.size = CGSize(width: 809/30, height: 1024/30)
+        node.size = CGSize(width: 809/20, height: 1024/20)
         node.position = CGPoint(x: 0, y: 280 + node.size.height)
         node.zPosition = 1
         node.name = "player"
@@ -69,7 +69,7 @@ class Player {
     func animatePlayer() {
         if(!isJumping) {
             if(!damageCD) {
-                node.size = CGSize(width: 809/30, height: 1024/30)
+                node.size = CGSize(width: 809/15, height: 1024/15)
                 node.removeAction(forKey: "animation")
                 node.run(SKAction.repeatForever(SKAction.animate(with: textures, timePerFrame: 1/TimeInterval(textures.count), resize: false, restore: false)), withKey: "animation")
             }
@@ -78,7 +78,7 @@ class Player {
     func animateWalk() {
         if(!isJumping) {
             if(!damageCD) {
-                node.size = CGSize(width: 927/30, height: 1024/30)
+                node.size = CGSize(width: 809/15, height: 1024/15)
                 node.removeAction(forKey: "animation")
                 node.run(SKAction.repeatForever(SKAction.animate(with: walkingTextures, timePerFrame: 1/TimeInterval(walkingTextures.count), resize: false, restore: false)), withKey: "animation")
             }
@@ -93,7 +93,7 @@ class Player {
     func playerJump() {
         if(!isJumping) {
             if(!damageCD) {
-                node.size = CGSize(width: 809/30, height: 1024/30)
+                node.size = CGSize(width: 809/10, height: 1024/10)
                 node.texture = SKTexture(imageNamed: "playerJumping")
             }
             if isJumping && !isJumpAttacking { return }
@@ -127,7 +127,7 @@ class Player {
             }
             
             node.removeAction(forKey: "animation")
-            node.size = CGSize(width: 809/30, height: 1024/30)
+            node.size = CGSize(width: 809/15, height: 1024/15)
             node.texture = SKTexture(imageNamed: "playerDmg")
             node.physicsBody?.velocity = CGVector.zero
             node.zPosition = 3
