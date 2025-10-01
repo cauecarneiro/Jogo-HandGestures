@@ -79,14 +79,6 @@ class MenuScene: SKScene {
             let location = touch.location(in: self)
             let touchedNode = atPoint(location)
             if let name = touchedNode.name {
-                if(name.contains("Button") ) {
-//                    vibrate(with: .light)
-//                    SoundManager.shared.playButtonSound()
-                }
-                if(name.contains("Toggle")) {
-//                    vibrate(with: .light)
-//                    SoundManager.shared.playToggleSound()
-                }
                 
                 switch name {
                 case "playButton":

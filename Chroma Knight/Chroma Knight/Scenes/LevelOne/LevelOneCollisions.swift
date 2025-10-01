@@ -37,13 +37,7 @@ extension LevelOneScene {
     
     func collideWithFloor() {
         if player.isJumping {
-//
             player.collideWithFloor()
-//            if(activeTouches.values.contains(leftButton) || activeTouches.values.contains(rightButton)) {
-//                player.animateWalk()
-//            } else {
-//                player.animatePlayer()
-//            }
         }
     }
 }

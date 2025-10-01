@@ -2,8 +2,6 @@
 //  Player.swift
 //  Chroma Knight
 //
-//  Created by Thiago Parisotto on 18/06/24.
-//
 
 import Foundation
 import SpriteKit
@@ -41,8 +39,6 @@ class Player {
         node.physicsBody?.restitution = 0.0
         node.physicsBody?.friction = 1.0
         node.physicsBody?.categoryBitMask = PhysicsCategory.player
-//        node.physicsBody?.collisionBitMask = PhysicsCategory.ground | PhysicsCategory.slime
-//        node.physicsBody?.contactTestBitMask = PhysicsCategory.ground | PhysicsCategory.slime
         
         
         self.textures.append(SKTexture(imageNamed: "player0"))
