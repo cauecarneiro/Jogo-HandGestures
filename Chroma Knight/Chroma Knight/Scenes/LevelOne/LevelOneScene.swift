@@ -41,7 +41,7 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     
     private let voiceLevelLabel: SKLabelNode
     private var voiceTimer: Timer!
-    var arController = ARViewController(cameraFrame: CGRect(x: 100, y: 100, width: 100, height: 100), isCameraHidden: false)
+    var arController = ARViewController(cameraFrame: CGRect(x: 668, y: 12, width: 210 * 0.80, height: 100), isCameraHidden: false)
     var currentMovement: MovementState = .none
     override init(size: CGSize) {
         controllerBackground = SKSpriteNode(imageNamed: "controllerBackground")
@@ -125,6 +125,9 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
             
             let paredeWidth: CGFloat = 60 * 0.50
             let paredeHeight: CGFloat = 500 * 0.50
+            
+            
+            
             
 
             // --- Plataformas Horizontais ---
@@ -228,6 +231,7 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
             
             //Menu no jogo
             let menuMini = SKSpriteNode(imageNamed: "menuMini")
+            
             menuMini.size = CGSize(width: 270 * 0.80, height: 520 * 0.80)
             menuMini.position = CGPoint(x: size.width - 100, y: size.height/2)
             menuMini.zPosition = 1
@@ -238,6 +242,21 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
             menuMini.physicsBody?.contactTestBitMask = PhysicsCategory.player
             addChild(menuMini)
             
+            
+            let porta = SKSpriteNode(imageNamed: "porta")
+            
+            porta.size = CGSize(width: 50, height: 60)
+            porta.position = CGPoint(x: platform11.position.x + 15, y: platform11.position.y + 40)
+            porta.zPosition = 1
+            porta.physicsBody = SKPhysicsBody(rectangleOf: porta.size)
+            porta.physicsBody?.isDynamic = false
+            porta.physicsBody?.categoryBitMask = PhysicsCategory.fire // Define a categoria como fogo
+            porta.physicsBody?.collisionBitMask = PhysicsCategory.none // O fogo não colide "fisicamente" com nada (não para outros objetos)
+            porta.physicsBody?.contactTestBitMask = PhysicsCategory.player // ESSENCIAL: Avisa quando o player entra em contato
+            
+            porta.name = "fireColisao"
+            
+            addChild(porta)
             
             
             // --- Adiciona a física para todas as plataformas de uma vez ---

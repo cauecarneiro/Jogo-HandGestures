@@ -16,14 +16,14 @@ class PauseNode: SKNode {
     
     init(size: CGSize) {
         
-        let diameter: CGFloat = 48
+        let diameter: CGFloat = 100
         let circle = SKShapeNode(circleOfRadius: diameter / 2)
         circle.fillColor = SKColor(white: 1.0, alpha: 0.15) // leve transparência
         circle.strokeColor = SKColor(white: 1.0, alpha: 0.3)
         circle.lineWidth = 2
-        circle.position = CGPoint(x: size.width - 70, y: size.height - 70)
+        circle.position = CGPoint(x: size.width - 100, y: size.height/2)
         circle.name = "pauseButton"
-        circle.zPosition = 1
+        circle.zPosition = 5
         
         // Barras do ícone de pause
         let barWidth = diameter * 0.16
