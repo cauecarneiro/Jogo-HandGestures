@@ -10,7 +10,7 @@ import HandGesturesClassifier
 class GameViewController: UIViewController {
     
     //instanciando a ARViewController
-    let arVC = ARViewController(cameraFrame: CGRect(x: 0, y: 0, width: 150, height: 200), isCameraHidden: false)
+//    let arVC = ARViewController(cameraFrame: CGRect(x: 0, y: 0, width: 150, height: 200), isCameraHidden: false)
     
     
     
@@ -24,17 +24,17 @@ class GameViewController: UIViewController {
         skView.presentScene(menuScene)
         
         // Adiciona ARViewController como child
-        addChild(arVC)
-        view.addSubview(arVC.view)
-        arVC.didMove(toParent: self)
-        
-        // Configura callback de gestos
-        arVC.onGestureUpdate = { [weak self] gesture in
-            guard let self = self else { return }
-            if let scene = skView.scene as? LevelOneScene {
-                scene.handleGesture(gesture: gesture)
-            }
-        }
+//        addChild(arVC)
+//        view.addSubview(arVC.view)
+//        arVC.didMove(toParent: self)
+//        
+//        // Configura callback de gestos
+//        arVC.onGestureUpdate = { [weak self] gesture in
+//            guard let self = self else { return }
+//            if let scene = skView.scene as? LevelOneScene {
+//                scene.handleGesture(gesture: gesture)
+//            }
+//        }
 
     }
     

@@ -41,8 +41,8 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     
     private let voiceLevelLabel: SKLabelNode
     private var voiceTimer: Timer!
-    
-    
+    var arController = ARViewController(cameraFrame: CGRect(x: 100, y: 100, width: 100, height: 100), isCameraHidden: false)
+    var currentMovement: MovementState = .none
     override init(size: CGSize) {
         controllerBackground = SKSpriteNode(imageNamed: "controllerBackground")
         controllerBackground.scale(to: CGSize(width: size.width, height: size.height / 3))
@@ -313,6 +313,13 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         self.isUserInteractionEnabled = true
         NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        if let cameraFrame = self.arController.view {
+            cameraFrame.backgroundColor = .clear
+            cameraFrame.frame = view.bounds
+            view.addSubview(cameraFrame)
+            
+            view.superview?.sendSubviewToBack(view)
+        }
     }
     
     override func willMove(from view: SKView) {
@@ -322,6 +329,8 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         // Remove observers when the scene is no longer in the view hierarchy
         NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
+        
+        arController.view?.removeFromSuperview()
     }
     
     @objc func appDidEnterBackground() {
@@ -332,8 +341,8 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func update(_ currentTime: TimeInterval) {
-            calculatePlayerMovement()
-
+        let handState = arController.gesture
+        updateHandState(handState)
             // --- Início do código da armadilha ---
 
             // Defina o centro da área onde a armadilha será acionada
@@ -518,7 +527,7 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     
     
     
-    func calculatePlayerMovement() {
+//    func calculatePlayerMovement() {
         // Movimentação por botões de tela
 //        if activeTouches.values.contains(leftButton) {
 //            player.movePlayer(direction: -1, maxWidth: size.width)
@@ -529,8 +538,16 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         
         // Movimentação por gestos
         
-        player.movePlayer(direction: gestureDirection, maxWidth: size.width)
-    }
+//        switch arController.gesture {
+//        case .open:
+//            player.movePlayer(direction: 1, maxWidth: size.width)
+//        case .closed:
+//            player.movePlayer(direction: -1, maxWidth: size.width)
+//        case .background:
+//            player.movePlayer(direction: 0, maxWidth: size.width)
+//        }
+//        player.movePlayer(direction: gestureDirection, maxWidth: size.width)
+    
     
     
     
@@ -541,16 +558,22 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     }
         
     
-    func handleGesture(gesture: HandPoses) {
-        switch gesture {
-        case .open:
-            gestureDirection = 1
-        case .closed:
-            gestureDirection = -1
-        case .background:
-            gestureDirection = 0
-        }
-    }
+//    func handleGesture(gesture: HandPoses) {
+//        switch gesture {
+//        case .open:
+//            gestureDirection = 1
+//        case .closed:
+//            gestureDirection = -1
+//        case .background:
+//            gestureDirection = 0
+//        }
+//    }
     
+}
+
+enum MovementState{
+    case none
+    case forward
+    case backward
 }
 
