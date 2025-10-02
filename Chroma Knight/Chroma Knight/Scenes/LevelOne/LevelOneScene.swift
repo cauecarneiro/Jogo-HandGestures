@@ -524,8 +524,40 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func gameOver() {
-        self.isPaused.toggle()
-        presentMenuScene()
+        // 1. Garante que o código de game over só rode uma vez
+        
+        // Pausa a cena para congelar a ação
+        self.isPaused = true
+        
+        // --- 2. Criar e configurar a imagem de fundo ---
+        let gameOverBackground = SKSpriteNode(imageNamed: "fireAcademy") // IMPORTANTE: Mude para o nome da sua imagem de game over
+        gameOverBackground.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
+        gameOverBackground.size = self.size // Faz a imagem cobrir a tela inteira
+        gameOverBackground.zPosition = 100 // Um valor bem alto para garantir que fique na frente de tudo
+        
+        
+        // --- 3. Criar e configurar o texto ---
+        let gameOverLabel = SKLabelNode(fontNamed: "Retro Gaming") // Usando uma fonte que você já usa na cena
+        gameOverLabel.text = "Você deixou a academy pegar fogo"
+        gameOverLabel.fontSize = 32
+        gameOverLabel.fontColor = .black
+        gameOverLabel.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
+        gameOverLabel.zPosition = 101 // Na frente do background
+        
+        // Para que o texto quebre a linha em telas menores
+        gameOverLabel.numberOfLines = 0
+        gameOverLabel.preferredMaxLayoutWidth = self.size.width - 60 // Define uma largura máxima com margens
+        
+        
+        // --- 4. Adicionar os elementos na cena ---
+        addChild(gameOverBackground)
+        addChild(gameOverLabel)
+        
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
+            // O código aqui dentro será executado após 3 segundos, mesmo com a cena pausada.
+            self?.presentMenuScene()
+        }
     }
     
     //new
