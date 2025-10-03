@@ -250,11 +250,9 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
             porta.zPosition = 1
             porta.physicsBody = SKPhysicsBody(rectangleOf: porta.size)
             porta.physicsBody?.isDynamic = false
-            porta.physicsBody?.categoryBitMask = PhysicsCategory.fire // Define a categoria como fogo
-            porta.physicsBody?.collisionBitMask = PhysicsCategory.none // O fogo não colide "fisicamente" com nada (não para outros objetos)
+            porta.physicsBody?.categoryBitMask = PhysicsCategory.porta // Define a categoria como fogo
+            porta.physicsBody?.collisionBitMask = PhysicsCategory.player // O fogo não colide "fisicamente" com nada (não para outros objetos)
             porta.physicsBody?.contactTestBitMask = PhysicsCategory.player // ESSENCIAL: Avisa quando o player entra em contato
-            
-            porta.name = "fireColisao"
             
             addChild(porta)
             
@@ -523,6 +521,7 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
         return false
     }
     
+    
     func gameOver() {
         // 1. Garante que o código de game over só rode uma vez
         
@@ -559,6 +558,48 @@ class LevelOneScene: SKScene, SKPhysicsContactDelegate {
             self?.presentMenuScene()
         }
     }
+    
+    
+    func gameWin() {
+        // 1. Garante que o código de game over só rode uma vez
+        
+        // Pausa a cena para congelar a ação
+        self.isPaused = true
+        
+        // --- 2. Criar e configurar a imagem de fundo ---
+        let gameWinBackground = SKSpriteNode(imageNamed: "levelOneBackground")
+        gameWinBackground.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
+        gameWinBackground.size = self.size // Faz a imagem cobrir a tela inteira
+        gameWinBackground.zPosition = 100 // Um valor bem alto para garantir que fique na frente de tudo
+        
+        
+        // --- 3. Criar e configurar o texto ---
+        let gameWinLabel = SKLabelNode(fontNamed: "Retro Gaming") // Usando uma fonte que você já usa na cena
+//        gameWinLabel.text = "Parabéns, você salvou o Academy!"
+        gameWinLabel.fontSize = 32
+        gameWinLabel.fontColor = .black
+        gameWinLabel.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
+        gameWinLabel.zPosition = 101 // Na frente do background
+        
+        // Para que o texto quebre a linha em telas menores
+        gameWinLabel.numberOfLines = 0
+        gameWinLabel.preferredMaxLayoutWidth = self.size.width - 60 // Define uma largura máxima com margens
+        
+        
+        // --- 4. Adicionar os elementos na cena ---
+        addChild(gameWinBackground)
+        addChild(gameWinLabel)
+        
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
+            // O código aqui dentro será executado após 3 segundos, mesmo com a cena pausada.
+            self?.presentMenuScene()
+        }
+    }
+    
+    
+    
+    
     
     //new
     func togglePause() {

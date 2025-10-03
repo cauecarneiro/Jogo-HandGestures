@@ -18,9 +18,14 @@ extension LevelOneScene {
             collideWithFloor()
         }
         
+        if (contactA == PhysicsCategory.player && contactB == PhysicsCategory.porta) || (contactA == PhysicsCategory.porta && contactB == PhysicsCategory.player) {
+            gameWin()
+        }
+        
         //Contato com o Fire
         if (contactA == PhysicsCategory.player && contactB == PhysicsCategory.fire) || (contactA == PhysicsCategory.fire && contactB == PhysicsCategory.player) {
             player.takeDamage(direction: 0, damage: 3)
+            //abrir academy pegando fogo
         }
         
         //Contato com as paredes
@@ -32,6 +37,8 @@ extension LevelOneScene {
         if(contactA == PhysicsCategory.player && contactB == PhysicsCategory.rightWall || contactB == PhysicsCategory.player && contactA == PhysicsCategory.rightWall ) {
             player.node.physicsBody?.velocity.dx = 0
         }
+        
+        //contato com a porta
     }
     
     
@@ -49,5 +56,6 @@ struct PhysicsCategory {
     static let rightWall: UInt32 = 1 << 4
     static let leftWall: UInt32 = 1 << 5
     static let fire: UInt32 = 1 << 9  // 16
+    static let porta: UInt32 = 1 << 10
 }
 
