@@ -1,3 +1,3 @@
 # Chroma Knight  
 
-jogo iOS em SpriteKit. Plataformer 2D com controles por toque: movimento, pulo, ataque e combo. Enfrente slimes, fantasmas e o Slime King. Colete moedas e frutas. Haptics e sons imersivos. Feito com Swift e Xcode. Pasta Chroma Knight
+Jogo iOS em SpriteKit. Plataformer 2D com controles por posição da mão: movimento e pulo. Feito com Swift e Xcode. Pasta Chroma Knight
